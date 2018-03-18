@@ -31,7 +31,7 @@ In case you are curious, I will be using a solid ***zero percent*** of the code,
 - Implement a replay system
 - Add multiple AI
 
-***Demo features possibly iNcLuDeD bUt NoT lImItEd To***
+***Demo features possibly included but not limited to***
 
 - Different board or piece types
 - "Random" game mode (Pieces are random and placed randomly to begin with)
