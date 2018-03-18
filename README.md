@@ -22,7 +22,7 @@ I was in a group of five people, and needless to say I learned a lot about softw
 
 Although I recieved an A on this project, I wanted to come back and revisit it in a personal repository. The goal of this recreation is to solidify what I learned and to display it for potential employers or anyone who cares to see it. It won't be perfect, but it will be what you could call a literal "good old college try".
 
-In case you are curious, I will be using a solid ***zero percent*** of the code, diagrams, or document text from my class project. Although a majority of that old information [came from me to begin with](insert), I will be building this project from the ground up again completely anew.
+In case you are curious, I will be using a solid ***zero percent*** of the code, diagrams, or document text from my class project. Although a majority of that old information [came from me to begin with](https://gyazo.com/add5a42d7b87d7c7d401dd80ecd125c8), I will be building this project from the ground up again completely anew.
 
 ***Personal goals for this project***
 
