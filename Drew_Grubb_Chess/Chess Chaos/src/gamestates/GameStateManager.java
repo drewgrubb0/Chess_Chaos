@@ -58,19 +58,14 @@ public class GameStateManager
 	}
 
 	/**
-	 * @return the currentState
-	 */
-	public int getCurrentState()
-	{
-		return currentState;
-	}
-
-	/**
+	 * Changes current state so that the GSM will now update and render
+	 * that state. Calls init() of new state.
 	 * @param currentState the currentState to set
 	 */
 	public void setCurrentState(int currentState)
 	{
 		this.currentState = currentState;
+		states[currentState].init();
 	}
 
 	/**

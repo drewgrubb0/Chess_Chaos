@@ -1,5 +1,6 @@
 package pieces;
 
+import boards.Move;
 import boards.Position;
 
 /**
@@ -36,7 +37,22 @@ public class Pawn extends Piece
 	@Override
 	public void updatePossibleMoves()
 	{
-		
+		if(pieceColor == Piece.WHITE)
+		{
+			
+		}
+		if(pieceColor == Piece.BLACK)
+		{
+			
+		}
+		if(pieceColor == Piece.GREEN)
+		{
+			
+		}
+		if(pieceColor == Piece.BLUE)
+		{
+			
+		}
 	}
 
 	@Override

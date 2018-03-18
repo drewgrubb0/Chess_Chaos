@@ -80,14 +80,4 @@ public class InputManager implements MouseListener, MouseMotionListener
 	{
 		return mousePosition;
 	}
-	
-	public int getMouseX()
-	{
-		return mousePosition.x;
-	}
-	
-	public int getMouseY()
-	{
-		return mousePosition.y;
-	}
 }

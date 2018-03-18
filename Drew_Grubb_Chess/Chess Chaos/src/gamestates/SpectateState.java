@@ -39,12 +39,6 @@ public class SpectateState implements GameState
 	}
 
 	@Override
-	public boolean isClickingButton(DButton button)
-	{
-		return false;
-	}
-
-	@Override
 	public void performButtonAction(int buttonID)
 	{
 	}

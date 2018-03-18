@@ -1,6 +1,5 @@
 package boards;
 
-import gamestates.GameState;
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -19,10 +18,9 @@ public class ChessBoard extends Board
 	/**
 	 * Instantiates a Standard 8x8 ChessBoard
 	 */
-	public ChessBoard(GameState state)
+	public ChessBoard()
 	{
 		super(8, 8);
-		this.state = state;
 		
 		setPiece(new Rook(Piece.BLACK, new Position(0, 0)));
 		setPiece(new Rook(Piece.WHITE, new Position(0, 7)));

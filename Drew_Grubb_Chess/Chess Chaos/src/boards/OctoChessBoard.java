@@ -20,10 +20,9 @@ public class OctoChessBoard extends Board
 	 * Sets up octagonal chess board with solid neutral pieces as the border
 	 * @param playState 
 	 */
-	public OctoChessBoard(GameState state)
+	public OctoChessBoard()
 	{	
 		super(8, 8);
-		this.state = state;
 		
 		//Border Pieces
 		setPiece(new Pawn(Piece.NEUTRAL, new Position(0, 0)));

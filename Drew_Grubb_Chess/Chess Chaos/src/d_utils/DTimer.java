@@ -13,10 +13,6 @@ public class DTimer
 	private long referenceTime;
 	private long lastKnownTime;
 	
-	private int nowTime;
-	private int numMinutes;
-	private int numSeconds;
-	
 	private boolean paused;
 	
 	/**
@@ -24,7 +20,6 @@ public class DTimer
 	 */
 	public DTimer()
 	{
-		nowTime = 0;
 		this.paused = true;
 	}
 	
@@ -108,9 +103,9 @@ public class DTimer
 	 */
 	public String toString()
 	{
-		nowTime = (int) (getTime() / 1000);
-		numSeconds = nowTime % 60;
-		numMinutes = nowTime / 60;
+		long nowTime = (int) (getTime() / 1000);
+		long numSeconds = nowTime % 60;
+		long numMinutes = nowTime / 60;
 		
 		//Adds extra 0 to 0-9 to keep format consistent
 		if(numMinutes < 10 && numSeconds < 10)

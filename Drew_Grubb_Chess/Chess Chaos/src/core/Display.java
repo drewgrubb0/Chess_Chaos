@@ -3,6 +3,7 @@ package core;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
@@ -36,12 +37,12 @@ public class Display extends Canvas
 	 * before creating the window display.
 	 */
 	public Display()
-	{
-		gameStateManager = new GameStateManager(this);
-		
+	{	
 		listener = new InputManager();
 		this.addMouseListener(listener);
 		this.addMouseMotionListener(listener);
+		
+		gameStateManager = new GameStateManager(this);
 		
 		width = 800;
 		height = 600;
@@ -96,6 +97,9 @@ public class Display extends Canvas
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, width, height);
 		
+		//Set default Font
+		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+		
 		gameStateManager.renderCurrentState(g);
 		
 		g.dispose();
@@ -107,6 +111,6 @@ public class Display extends Canvas
 	 */
 	public InputManager getInputManager()
 	{
-		return null;
+		return listener;
 	}
 }

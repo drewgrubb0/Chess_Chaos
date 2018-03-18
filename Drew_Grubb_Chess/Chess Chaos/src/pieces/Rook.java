@@ -1,5 +1,6 @@
 package pieces;
 
+import boards.Move;
 import boards.Position;
 
 /**
@@ -34,8 +35,26 @@ public class Rook extends Piece
 
 	@Override
 	public void updatePossibleMoves()
-	{
+	{	
+		for(int x = currentPosition.getPosX() + 1 ; x < board.getWidth() ; x++)
+		{
+			
+		}
 		
+		for(int x = currentPosition.getPosX() - 1 ; x >= 0 ; x--)
+		{
+			
+		}
+		
+		for(int y = currentPosition.getPosY() + 1 ; y < board.getHeight() ; y++)
+		{
+			
+		}
+		
+		for(int y = currentPosition.getPosY() - 1 ; y >= 0 ; y--)
+		{
+			
+		}
 	}
 
 	@Override

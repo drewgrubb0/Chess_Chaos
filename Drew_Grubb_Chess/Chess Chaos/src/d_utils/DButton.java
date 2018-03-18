@@ -1,5 +1,6 @@
 package d_utils;
 
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -15,8 +16,6 @@ public class DButton
 {
 	private int x, y;
 	private int width, height;
-	
-	private int textX, textY;
 
 	private String text; 
 	
@@ -81,9 +80,6 @@ public class DButton
 	public void clearText()
 	{
 		this.text = "";
-		
-		textX = 0;
-		textY = 0;
 	}
 	
 	/**
@@ -165,7 +161,14 @@ public class DButton
 	 */
 	public void renderHovered(Graphics2D g)
 	{
+		Color color = g.getColor();
+		
+		g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 180));
 		g.fillRect(x, y, width, height);
+		
+		g.setColor(color);
+		
+		g.drawRect(x, y, width, height);
 		renderText(g);
 	}
 	
@@ -178,8 +181,8 @@ public class DButton
 	{
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
 		
-		textX = x + (width - metrics.stringWidth(text)) / 2;
-		textY = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+		int textX = x + (width - metrics.stringWidth(text)) / 2;
+		int textY = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
 				
 		g.drawString(text, textX, textY);
 	}

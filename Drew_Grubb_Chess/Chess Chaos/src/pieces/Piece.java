@@ -152,4 +152,22 @@ public abstract class Piece
 	{
 		this.board = board;
 	}
+
+	/**
+	 * Updates position
+	 * @param position
+	 */
+	public void setPosition(Position position)
+	{
+		currentPosition = position;
+		hasMoved = true;
+	}
+	
+	/**
+	 * @return moves
+	 */
+	public LinkedList<Move> getPossibleMoves()
+	{
+		return moves;
+	}
 }

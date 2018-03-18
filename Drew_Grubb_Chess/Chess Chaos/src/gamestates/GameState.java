@@ -2,6 +2,7 @@ package gamestates;
 
 import java.awt.Graphics2D;
 
+import core.Display;
 import d_utils.DButton;
 
 /**
@@ -12,8 +13,7 @@ import d_utils.DButton;
  * @author Drew Grubb
  */
 public interface GameState
-{
-	
+{	
 	/**
 	 * Calls the state initiation method whenever the
 	 * state is switched to the active state
@@ -30,13 +30,6 @@ public interface GameState
 	 * any objects/text to the screen
 	 */
 	public void render(Graphics2D g);
-
-	/**
-	 * checks to see if a button is being clicked
-	 * @param rect
-	 * @return 
-	 */
-	public boolean isClickingButton(DButton button);
 	
 	/**
 	 * Performs an action based on a button that is

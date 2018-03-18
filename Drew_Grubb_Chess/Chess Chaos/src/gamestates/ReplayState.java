@@ -6,22 +6,17 @@ import d_utils.DButton;
 
 /**
  * 
+ *
  * @author Drew Grubb
  */
-public class MenuState implements GameState
+public class ReplayState implements GameState
 {
-	GameStateManager manager;
 
-	
-	
 	/**
-	 * 
 	 *
-	 * @param gameStateManager
 	 */
-	public MenuState(GameStateManager gameStateManager)
+	public ReplayState()
 	{
-		this.manager = gameStateManager;
 	}
 
 	@Override

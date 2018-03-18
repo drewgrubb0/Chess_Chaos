@@ -3,13 +3,14 @@ package boards;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import gamestates.GameState;
 import pieces.Piece;
 import pieces.PieceType;
 
 /**
  * Abstract class board used for the creation of new Chess Boards and
  * the checking for check, checkmate, and stalemate.
+ * 
+ * Renders board and pieces.
  *
  * @author Drew Grubb
  */
@@ -27,8 +28,6 @@ public abstract class Board
 	private Position kingPosition;
 	private boolean isInCheck;
 	
-	protected GameState state;
-	
 	/**
 	 * Initializes new Board
 	 *
@@ -40,11 +39,6 @@ public abstract class Board
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
 		clearBoard();
-	}
-	
-	public void update()
-	{
-		
 	}
 	
 	/**
@@ -222,9 +216,12 @@ public abstract class Board
 		for(int x = 0 ; x < board.length ; x++)
 			for(int y = 0 ; y < board[0].length ; y++)
 			{
-				board[x][y].clearMoves();
-				board[x][y].setBoard(this);
-				board[x][y].updatePossibleMoves();
+				if(board[x][y] != null)
+				{
+					board[x][y].clearMoves();
+					board[x][y].setBoard(this);
+					board[x][y].updatePossibleMoves();
+				}
 			}
 	}
 
@@ -232,9 +229,65 @@ public abstract class Board
 	 *
 	 * @param peek
 	 */
-	public void performMove(Piece piece, Move move)
+	public void performMove(Move move)
 	{
+		Piece piece = getPiece(move.getPreviousPosition().getPosX(), move.getPreviousPosition().getPosY());
+		
 		board[move.getPreviousPosition().getPosX()][move.getPreviousPosition().getPosY()] = null;
 		board[move.getNewPosition().getPosX()][move.getNewPosition().getPosY()] = piece;
+		board[move.getNewPosition().getPosX()][move.getNewPosition().getPosY()].setPosition(move.getNewPosition());
+		
+		piece = null;
+		selectedPiece = null;
+	}
+
+	/**
+	 * Returns designated piece
+	 * @param posX
+	 * @param posY
+	 * @return
+	 */
+	public Piece getPiece(int posX, int posY)
+	{
+		if(posX >= 0 && posY >= 0 && posX < boardWidth && posY < boardHeight)
+			return board[posX][posY];
+		else
+			return null;
+	}
+
+	/**
+	 * Sets selected piece for move highlighting
+	 * @param selectedPiece2
+	 */
+	public void setSelectedPiece(Piece selectedPiece)
+	{
+		if(this.selectedPiece != selectedPiece)
+		{
+			this.selectedPiece = selectedPiece;
+		}
+	}
+	
+	/**
+	 * @return current board width
+	 */
+	public int getWidth()
+	{
+		return boardWidth;
+	}
+	
+	/**
+	 * @return current board height
+	 */
+	public int getHeight()
+	{
+		return boardHeight;
+	}
+
+	/**
+	 * @return board
+	 */
+	public Piece[][] getBoard()
+	{
+		return board;
 	}
 }
