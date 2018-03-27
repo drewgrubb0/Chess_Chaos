@@ -1,7 +1,8 @@
 package pieces;
 
-import boards.Move;
-import boards.Position;
+import moves.Move;
+import moves.MoveSet;
+import moves.Position;
 
 /**
  * Standard Rook Piece
@@ -17,11 +18,10 @@ public class Rook extends Piece
 	/**
 	 * Instantiates new Pawn
 	 * @param pieceColor
-	 * @param position
 	 */
-	public Rook(int pieceColor, Position position)
+	public Rook(int pieceColor)
 	{
-		super(pieceColor, position);
+		super(pieceColor);
 		
 		if(pieceColor == Piece.WHITE)
 			setImage("res/Rook_WHITE.png");
@@ -31,30 +31,40 @@ public class Rook extends Piece
 			setImage("res/Rook_GREEN.png");
 		if(pieceColor == Piece.BLUE)
 			setImage("res/Rook_BLUE.png");
+		
+		pieceType = PieceType.ROOK;
 	}
 
 	@Override
-	public void updatePossibleMoves()
+	public MoveSet getPossibleMoves(boolean needsVerification)
 	{	
-		for(int x = currentPosition.getPosX() + 1 ; x < board.getWidth() ; x++)
+		MoveSet moves = new MoveSet(board);
+		
+		for(int x = 1 ; x + currentPosition.getPosX() < board.getLength(); x++)
 		{
-			
+			if(moves.tryMove(new Move(currentPosition, x, 0), needsVerification))
+				break;
 		}
 		
-		for(int x = currentPosition.getPosX() - 1 ; x >= 0 ; x--)
+		for(int x = 1 ; currentPosition.getPosX() - x >= 0 ; x++)
 		{
-			
+			if(moves.tryMove(new Move(currentPosition, -x, 0), needsVerification))
+				break;
 		}
 		
-		for(int y = currentPosition.getPosY() + 1 ; y < board.getHeight() ; y++)
+		for(int y = 1 ; y + currentPosition.getPosY() < board.getHeight() ; y++)
 		{
-			
+			if(moves.tryMove(new Move(currentPosition, 0, y), needsVerification))
+				break;
 		}
 		
-		for(int y = currentPosition.getPosY() - 1 ; y >= 0 ; y--)
+		for(int y = 1 ; currentPosition.getPosY() - y >= 0 ; y++)
 		{
-			
+			if(moves.tryMove(new Move(currentPosition, 0, -y), needsVerification))
+				break;
 		}
+		
+		return moves;
 	}
 
 	@Override

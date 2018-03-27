@@ -1,6 +1,9 @@
 package pieces;
 
-import boards.Position;
+import boards.Board;
+import moves.Move;
+import moves.MoveSet;
+import moves.Position;
 
 /**
  * Standard Knight Piece
@@ -19,9 +22,9 @@ public class Knight extends Piece
 	 * @param pieceColor
 	 * @param position
 	 */
-	public Knight(int pieceColor, Position position)
+	public Knight(int pieceColor)
 	{
-		super(pieceColor, position);
+		super(pieceColor);
 		
 		if(pieceColor == Piece.WHITE)
 			setImage("res/Knight_WHITE.png");
@@ -31,12 +34,34 @@ public class Knight extends Piece
 			setImage("res/Knight_GREEN.png");
 		if(pieceColor == Piece.BLUE)
 			setImage("res/Knight_BLUE.png");
+		
+		pieceType = PieceType.KNIGHT;
 	}
 
 	@Override
-	public void updatePossibleMoves()
+	public MoveSet getPossibleMoves(boolean needsVerification)
 	{
+		MoveSet moves = new MoveSet(board);
 		
+		moves.tryMove(new Move(currentPosition, 2, 1), needsVerification);
+		
+		moves.tryMove(new Move(currentPosition, -2, 1), needsVerification);
+		
+		moves.tryMove(new Move(currentPosition, 2, -1), needsVerification);
+		
+		moves.tryMove(new Move(currentPosition, -2, -1), needsVerification);
+		
+		moves.tryMove(new Move(currentPosition, 1, 2), needsVerification);
+		
+		moves.tryMove(new Move(currentPosition, -1, 2), needsVerification);
+
+		moves.tryMove(new Move(currentPosition, 1, -2), needsVerification);
+		
+		moves.tryMove(new Move(currentPosition, -1, -2), needsVerification);
+		
+//		System.out.println("Moveset: " + moves);
+		
+		return moves;
 	}
 
 	@Override

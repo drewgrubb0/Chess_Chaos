@@ -1,6 +1,8 @@
 package pieces;
 
-import boards.Position;
+import moves.Move;
+import moves.MoveSet;
+import moves.Position;
 
 /**
  * Standard King Piece
@@ -17,11 +19,10 @@ public class King extends Piece
 	/**
 	 * Instantiates new King
 	 * @param pieceColor
-	 * @param position
 	 */
-	public King(int pieceColor, Position position)
+	public King(int pieceColor)
 	{
-		super(pieceColor, position);
+		super(pieceColor);
 		
 		if(pieceColor == Piece.WHITE)
 			setImage("res/King_WHITE.png");
@@ -31,12 +32,39 @@ public class King extends Piece
 			setImage("res/King_GREEN.png");
 		if(pieceColor == Piece.BLUE)
 			setImage("res/King_BLUE.png");
+		
+		pieceType = PieceType.KING;
 	}
 
 	@Override
-	public void updatePossibleMoves()
+	public MoveSet getPossibleMoves(boolean needsVerification)
 	{
+		MoveSet moves = new MoveSet(board);
 		
+		//Castling
+		if(!hasMoved())
+		{
+			if(pieceColor == BLACK || pieceColor == WHITE)
+			{
+				
+			}
+			
+			if(pieceColor == GREEN || pieceColor == BLUE)
+			{
+				
+			}
+		}
+		
+		moves.tryMove(new Move(currentPosition, -1 , -1), needsVerification);
+		moves.tryMove(new Move(currentPosition, -1 , 0), needsVerification);
+		moves.tryMove(new Move(currentPosition, -1 , 1), needsVerification);
+		moves.tryMove(new Move(currentPosition, 0 , 1), needsVerification);
+		moves.tryMove(new Move(currentPosition, 0 , -1), needsVerification);
+		moves.tryMove(new Move(currentPosition, 1 , -1), needsVerification);
+		moves.tryMove(new Move(currentPosition, 1 , 0), needsVerification);
+		moves.tryMove(new Move(currentPosition, 1 , 1), needsVerification);
+		
+		return moves;
 	}
 
 	@Override

@@ -28,6 +28,16 @@ public class InputManager implements MouseListener, MouseMotionListener
 		mousePosition = new Point();
 	}
 	
+	/**
+	 * Clears any unused inputs remaining from last frame
+	 * Important because it prevents "ghost clicking", 
+	 * where holding down the mouse button and hovering over something clicks it.
+	 */
+	public void clearInputCallbacks()
+	{
+		isClicking = false;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
@@ -69,11 +79,6 @@ public class InputManager implements MouseListener, MouseMotionListener
 	public boolean isClicking()
 	{
 		return isClicking;
-	}
-	
-	public void setClicking(boolean clicking)
-	{
-		isClicking = clicking;
 	}
 	
 	public Point getMousePosition()

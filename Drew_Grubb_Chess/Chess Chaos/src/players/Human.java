@@ -1,9 +1,9 @@
 package players;
 
 import boards.Board;
-import boards.Move;
-import boards.Position;
 import input.InputManager;
+import moves.Move;
+import moves.Position;
 import pieces.Piece;
 
 /**
@@ -42,7 +42,7 @@ public class Human extends Player
 		else
 			return;
 		
-		Piece piece = board.getPiece(x, y);
+		Piece piece = board.getPiece(new Position(x, y));
 		if(piece != null)
 		{
 			if(piece.getPieceColor() == myColor)
@@ -62,7 +62,7 @@ public class Human extends Player
 			{
 				if(selectedPiece != null)
 				{
-					if(selectedPiece.canMoveTo(new Position(x, y)))
+					if(selectedPiece.getPossibleMoves(true).containsDest(new Position(x, y)))
 					{
 						//Piece Capture
 						setDecidedMove(new Move(selectedPiece.getPosition(), new Position(x, y)));
@@ -74,7 +74,7 @@ public class Human extends Player
 		{
 			if(selectedPiece != null)
 			{
-				if(selectedPiece.canMoveTo(new Position(x, y)))
+				if(selectedPiece.getPossibleMoves(true).containsDest(new Position(x, y)))
 				{
 					//Piece Movement
 					setDecidedMove(new Move(selectedPiece.getPosition(), new Position(x, y)));

@@ -101,6 +101,7 @@ public class Display extends Canvas
 		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		
 		gameStateManager.renderCurrentState(g);
+		listener.clearInputCallbacks();
 		
 		g.dispose();
 		bs.show();

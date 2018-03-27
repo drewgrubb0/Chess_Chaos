@@ -16,7 +16,7 @@ public class GameLoop
 	private static Display display;
 	private static boolean isRunning;
 	
-	/**
+	/** 
 	 * Begins program via start function
 	 * @param args
 	 */

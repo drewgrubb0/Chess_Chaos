@@ -10,8 +10,9 @@ import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
 import boards.Board;
-import boards.Move;
-import boards.Position;
+import moves.Move;
+import moves.MoveSet;
+import moves.Position;
 
 /**
  * The abstract chess piece superclass.
@@ -33,10 +34,10 @@ public abstract class Piece
 	protected Position currentPosition;
 	
 	protected BufferedImage image;
-	protected boolean hasMoved;
+	protected int numMovesMade;
 	
 	protected Board board;
-	protected LinkedList<Move> moves;
+	protected MoveSet moveSet;
 	
 	/**
 	 * Creates a new piece in the given position
@@ -44,18 +45,36 @@ public abstract class Piece
 	 * @param pieceColor
 	 * @param position
 	 */
-	public Piece(int pieceColor, Position position)
+	public Piece(int pieceColor)
 	{
 		this.pieceColor = pieceColor;
-		this.currentPosition = position;
 		
-		hasMoved = false;
+		numMovesMade = 0;
 		pieceType = PieceType.NULL;
-		moves = new LinkedList<Move>();
+		moveSet = new MoveSet(board);
 	}
 	
-	public abstract void updatePossibleMoves();
+	/**
+	 * Updates the possible moves based on the specific piece type.
+	 * In general, updatePossibleMoves algorithm will work as follows:
+	 * Create fake board
+	 * perform specific move on the board
+	 * if move causes the current player to be in check, it is skipped
+	 * if not, move is added to the move set.
+	 * 
+	 * @param needsVerification used to avoid infinite looping,
+	 * IE "Does this move need to check to see if it puts the player in check"
+	 * @return moveset
+	 */
+	public abstract MoveSet getPossibleMoves(boolean needsVerification);
+	
+	/**
+	 * Returns piece value of specific piece for the sake of minimax AI
+	 * @return
+	 */
 	public abstract int getPieceValue();
+	
+	/////Rendering
 	
 	public void render(Graphics2D g)
 	{
@@ -67,6 +86,94 @@ public abstract class Piece
 			g.setColor(Color.BLACK);
 			g.fillRect((currentPosition.getPosX() *Board.TILESIZE) + Board.BOARD_X_OFFSET, (currentPosition.getPosY() * Board.TILESIZE) + Board.BOARD_Y_OFFSET, Board.TILESIZE, Board.TILESIZE);
 		}
+	}
+	
+	/////Setters
+	
+	/**
+	 * Updates verified moveset
+	 */
+	public void updateMoveset()
+	{
+		moveSet = getPossibleMoves(true);
+	}
+	
+	/**
+	 * Increases number of moves made
+	 */
+	public void increaseNumMoves()
+	{
+		numMovesMade++;
+	}
+	
+	/**
+	 * Decreases number of moves made
+	 */
+	public void decreaseNumMoves()
+	{
+		if(numMovesMade > 0)
+			numMovesMade--;
+	}
+	
+	/**
+	 * Updates board
+	 * @param board
+	 */
+	public void setBoard(Board board)
+	{
+		this.board = board;
+	}
+
+	/**
+	 * Updates position
+	 * @param position
+	 */
+	public void setPosition(Position position)
+	{
+		currentPosition = position;
+	}
+	
+	/**
+	 * Sets piece BufferedImage to image at path
+	 * 
+	 * @param path
+	 */
+	public void setImage(String path)
+	{
+		try
+		{
+			image = ImageIO.read(new File(path));
+		} catch (IOException e)
+		{
+			image = null;
+		}
+	}
+	
+	/////Getters
+	
+	/**
+	 * Checks to see if a piece has moved by seeing how many moves it has made.
+	 * @return
+	 */
+	public boolean hasMoved()
+	{
+		return numMovesMade > 0;
+	}
+	
+	/**
+	 * @return bool value: can piece move
+	 */
+	public boolean canMove()
+	{
+		return moveSet.size() > 0;
+	}
+	
+	/**
+	 * @return Current verified moveset
+	 */
+	public MoveSet getVerifiedMoves()
+	{
+		return moveSet;
 	}
 	
 	/**
@@ -86,32 +193,6 @@ public abstract class Piece
 	}
 
 	/**
-	 * Checks to see if number of moves is > 0
-	 * @return
-	 */
-	public boolean canMove()
-	{
-		return moves.size() > 0;
-	}
-
-	/**
-	 * Utilizes overridden equals() method in moves to check if 
-	 * piece can move to the given position.
-	 * @param position
-	 * @return
-	 */
-	public boolean canMoveTo(Position position)
-	{
-		for(Move move : moves)
-		{
-			if(move.getNewPosition().equals(position))
-				return true;
-		}
-		
-		return false;
-	}
-
-	/**
 	 * @return currentPosition
 	 */
 	public Position getPosition()
@@ -120,54 +201,16 @@ public abstract class Piece
 	}
 	
 	/**
-	 * Sets piece BufferedImage to image at path
-	 * 
-	 * @param path
+	 * @return numMovesMade
 	 */
-	public void setImage(String path)
+	public int getNumMovesMade()
 	{
-		try
-		{
-			image = ImageIO.read(new File(path));
-		} catch (IOException e)
-		{
-			image = null;
-		}
-	}
-
-	/**
-	 * Clears all possible moves
-	 * Done in between turns
-	 */
-	public void clearMoves()
-	{
-		moves.clear();
-	}
-
-	/**
-	 * Updates board
-	 * @param board
-	 */
-	public void setBoard(Board board)
-	{
-		this.board = board;
-	}
-
-	/**
-	 * Updates position
-	 * @param position
-	 */
-	public void setPosition(Position position)
-	{
-		currentPosition = position;
-		hasMoved = true;
+		return numMovesMade;
 	}
 	
-	/**
-	 * @return moves
-	 */
-	public LinkedList<Move> getPossibleMoves()
+	@Override
+	public String toString()
 	{
-		return moves;
+		return pieceType + " at " + currentPosition;
 	}
 }

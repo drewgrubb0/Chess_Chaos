@@ -1,5 +1,6 @@
 package boards;
 
+import moves.Position;
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -22,30 +23,29 @@ public class ChessBoard extends Board
 	{
 		super(8, 8);
 		
-		setPiece(new Rook(Piece.BLACK, new Position(0, 0)));
-		setPiece(new Rook(Piece.WHITE, new Position(0, 7)));
-		setPiece(new Knight(Piece.BLACK, new Position(1, 0)));
-		setPiece(new Knight(Piece.WHITE, new Position(1, 7)));
-		setPiece(new Bishop(Piece.BLACK, new Position(2, 0)));
-		setPiece(new Bishop(Piece.WHITE, new Position(2, 7)));
-		setPiece(new Queen(Piece.BLACK, new Position(3, 0)));
-		setPiece(new Queen(Piece.WHITE, new Position(3, 7)));
-		setPiece(new King(Piece.BLACK, new Position(4, 0)));
-		setPiece(new King(Piece.WHITE, new Position(4, 7)));
-		setPiece(new Bishop(Piece.BLACK, new Position(5, 0)));
-		setPiece(new Bishop(Piece.WHITE, new Position(5, 7)));
-		setPiece(new Knight(Piece.BLACK, new Position(6, 0)));
-		setPiece(new Knight(Piece.WHITE, new Position(6, 7)));
-		setPiece(new Rook(Piece.BLACK, new Position(7, 0)));
-		setPiece(new Rook(Piece.WHITE, new Position(7, 7)));
+		setPiece(new Position(0, 0), new Rook(Piece.BLACK));
+		setPiece(new Position(0, 7), new Rook(Piece.WHITE));
+		setPiece(new Position(1, 0), new Knight(Piece.BLACK));
+		setPiece(new Position(1, 7), new Knight(Piece.WHITE));
+		setPiece(new Position(2, 0), new Bishop(Piece.BLACK));
+		setPiece(new Position(2, 7), new Bishop(Piece.WHITE));
+		setPiece(new Position(3, 0), new Queen(Piece.BLACK));
+		setPiece(new Position(3, 7), new Queen(Piece.WHITE));
+		setPiece(new Position(4, 0), new King(Piece.BLACK));
+		setPiece(new Position(4, 7), new King(Piece.WHITE));
+		setPiece(new Position(5, 0), new Bishop(Piece.BLACK));
+		setPiece(new Position(5, 7), new Bishop(Piece.WHITE));
+		setPiece(new Position(6, 0), new Knight(Piece.BLACK));
+		setPiece(new Position(6, 7), new Knight(Piece.WHITE));
+		setPiece(new Position(7, 0), new Rook(Piece.BLACK));
+		setPiece(new Position(7, 7), new Rook(Piece.WHITE));
 		
 		//Pawns
 		for(int x = 0 ; x < 8 ; x++)
 		{
-			setPiece(new Pawn(Piece.BLACK, new Position(x, 1)));
-			setPiece(new Pawn(Piece.WHITE, new Position(x, 6)));
-		}
-			
+			setPiece(new Position(x, 1), new Pawn(Piece.BLACK));
+			setPiece(new Position(x, 6), new Pawn(Piece.WHITE));
+		}	
 	}
 
 }

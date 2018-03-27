@@ -1,7 +1,7 @@
 package players;
 
 import boards.Board;
-import boards.Move;
+import moves.Move;
 import pieces.Piece;
 
 /**

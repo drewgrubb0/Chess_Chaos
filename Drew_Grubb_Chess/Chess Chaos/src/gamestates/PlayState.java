@@ -7,9 +7,9 @@ import java.util.Stack;
 
 import boards.Board;
 import boards.ChessBoard;
-import boards.Move;
 import d_utils.DButton;
 import d_utils.DTimer;
+import moves.Move;
 import pieces.Piece;
 import players.Human;
 import players.Player;
@@ -32,8 +32,6 @@ public class PlayState implements GameState
 	
 	boolean isPaused;
 	int losingColor = -2;
-	
-	Stack<Move> moves;
 
 	/**
 	 * Creates a new PlayState that handles the state of the board
@@ -45,26 +43,27 @@ public class PlayState implements GameState
 		
 		gameTimer = new DTimer();
 		
-		buttons = new DButton[1];
+		buttons = new DButton[2];
 		buttons[0] = new DButton();
-		buttons[0].setDimensions(700, 100, 50, 50);
+		buttons[0].setDimensions(650, 100, 100, 50);
 		buttons[0].setText("Pause");
+		
+		buttons[1] = new DButton();
+		buttons[1].setDimensions(650, 200, 100, 50);
+		buttons[1].setText("Undo");
 	}
 
 	@Override
 	public void init()
 	{
 		board = new ChessBoard();
+		board.switchTurn();
 		
 		players = new Player[2];
 		players[0] = new Human(board, manager.getInputManager(), Piece.WHITE);
 		players[1] = new Human(board, manager.getInputManager(), Piece.BLACK);
 		
-		moves = new Stack<Move>();
-		
-		currentTurnColor = Piece.WHITE;
-		
-		board.updatePossibleMoves();
+		currentTurnColor = 0;
 		
 		gameTimer.startTimer();
 		isPaused = false;
@@ -84,13 +83,10 @@ public class PlayState implements GameState
 			players[currentTurnColor].calculatePossibleMove();
 		}
 		
+		//Player Input/Calculations block
 		if(players[currentTurnColor].hasDecidedMove())
 			makeMove(players[currentTurnColor].getDecidedMove());
-		
 		board.setSelectedPiece(players[currentTurnColor].getSelectedPiece());
-		
-		if(manager.getInputManager().isClicking())
-			manager.getInputManager().setClicking(false);
 	}
 
 	@Override
@@ -106,6 +102,8 @@ public class PlayState implements GameState
 			else 
 				buttons[x].render(g);
 		
+		g.drawString("" + gameTimer, 750, 15);
+		
 		//EndGame Rendering
 		if(losingColor != -2)
 		{
@@ -116,11 +114,10 @@ public class PlayState implements GameState
 			}
 			else
 			{
-				//TODO
+				g.setFont(new Font("Calibri", Font.BOLD, 20));
+				g.drawString("Player " + (losingColor+1) + " Loses! Checkmate!", 175, 20);
 			}
 		}
-		
-		g.drawString("" + gameTimer, 750, 15);
 	}
 
 	@Override
@@ -141,6 +138,14 @@ public class PlayState implements GameState
 				buttons[buttonID].setText("Resume");
 			}
 		}
+		if(buttonID == 1)
+		{
+			if(board.getMoves().size() > 0)
+			{
+				board.undoLastMove();
+				switchTurn(true);
+			}
+		}
 	}
 	
 	/**
@@ -149,9 +154,8 @@ public class PlayState implements GameState
 	 */
 	public void makeMove(Move move)
 	{
-		moves.add(move);
 		board.performMove(move);
-		switchTurn();
+		switchTurn(false);
 	}
 
 	/**
@@ -161,29 +165,36 @@ public class PlayState implements GameState
 	 * Updating isInCheck
 	 * Updating isInCheckmate
 	 * Updating isInStalemate
-	 * Updating possibleMoves
 	 * Changing player control
 	 * Updating player boards/selected pieces/moves
 	 */
-	public void switchTurn()
-	{
-		board.updatePossibleMoves();
-		board.updateKingPosition(currentTurnColor);
-		board.UpdateInCheck(currentTurnColor);
+	public void switchTurn(boolean isUndoing)
+	{		
+		board.switchTurn();
+		
+		//Actual Changing of Player control
+		
+		if(isUndoing)
+		{
+			currentTurnColor--;
+			if(currentTurnColor < 0)
+				currentTurnColor = 1;
+		}
+		else
+		{
+			currentTurnColor++;
+			if(currentTurnColor >= players.length)
+				currentTurnColor = 0;
+		}
+		
+		players[currentTurnColor].activateTurn(board);
 		
 		if(board.isInCheckmate(currentTurnColor))
 			setLoser(currentTurnColor);
 		if(board.isInStalemate(currentTurnColor))
 			setLoser(-1);
-		if(board.isInCheck())
+		if(board.isInCheck(currentTurnColor))
 			System.out.println("Yer boi in Check");
-		
-		//Actual Changing of Player control
-		currentTurnColor++;
-		if(currentTurnColor >= players.length)
-			currentTurnColor = 0;
-		
-		players[currentTurnColor].activateTurn(board);
 	}
 	
 	/**
