@@ -21,17 +21,17 @@ To Do List for Chess Chaos
 - [x] Displays and Rendering : March 15
 - [x] Board/Game Mechanics : March 16
 - [x] Player System : March 17
-- [ ] GameStates and Buttons
+- [x] GameStates and Buttons : March 27
 - [x] Piece PossibleMove methods : March 26
 - [ ] Artificial Intelligence
-- [ ] Game Replaying
+- [x] Game Replaying : March 27
 - [ ] Demo Modes
 
 ***Test Plan***
 - [x] Initial Commit : March 26
-- [ ] 1. Introduction
-- [ ] 2. Testing Strategy
-- [ ] 3. Environment Requirements
+- [x] 1. Introduction : March 27
+- [x] 2. Testing Strategy : March 27
+- [x] 3. Environment Requirements : March 27
 - [ ] 4. Functions to be tested
 
 ***Various***
