@@ -2,7 +2,6 @@ package pieces;
 
 import moves.Move;
 import moves.MoveSet;
-import moves.Position;
 
 /**
  * Standard Rook Piece

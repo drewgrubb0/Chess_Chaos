@@ -1,9 +1,7 @@
 package pieces;
 
-import boards.Board;
 import moves.Move;
 import moves.MoveSet;
-import moves.Position;
 
 /**
  * Standard Knight Piece
@@ -58,8 +56,6 @@ public class Knight extends Piece
 		moves.tryMove(new Move(currentPosition, 1, -2), needsVerification);
 		
 		moves.tryMove(new Move(currentPosition, -1, -2), needsVerification);
-		
-//		System.out.println("Moveset: " + moves);
 		
 		return moves;
 	}

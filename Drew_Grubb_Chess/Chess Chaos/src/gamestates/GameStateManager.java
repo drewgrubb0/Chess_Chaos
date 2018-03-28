@@ -8,14 +8,23 @@ import input.InputManager;
 /**
  * Class to manage and maintain the updating, rendering, and switching of GameStates
  * Creates a convenience for accessing and updating active GameStates.
+ * This is where GameStates would have to manually be added to the code.
+ * 
+ * Is in charge of:
+ * - Calling update/render methods of active states.
+ * - Calling init methods of set states.
+ * 
+ * Is NOT in charge of:
+ * - Deciding to change a state
+ * - Performing any actual updating/rendering, merely a router.
  * 
  * @author Drew Grubb
  */
 public class GameStateManager
 {	
 	public static final int MENU_STATE = 0;
-	public static final int PLAY_STATE = 0;
-	public static final int SPECTATE_STATE = 0;
+	public static final int PLAY_STATE = 1;
+	public static final int REPLAY_STATE = 2;
 	
 	private Display display;
 	
@@ -24,6 +33,7 @@ public class GameStateManager
 
 	/**
 	 * Initializes new GameStateManager for Chess Chaos
+	 * Sets default active state.
 	 *
 	 * @param display
 	 */
@@ -35,9 +45,9 @@ public class GameStateManager
 		
 		states[0] = new MenuState(this);
 		states[1] = new PlayState(this);
-		states[2] = new SpectateState(this);
+		states[2] = new ReplayState(this);
 		
-		setCurrentState(1);
+		setCurrentState(2);
 	}
 	
 	/**

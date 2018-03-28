@@ -1,10 +1,7 @@
 package pieces;
 
-import static org.junit.jupiter.api.Assumptions.*;
-
 import moves.Move;
 import moves.MoveSet;
-import moves.Position;
 
 /**
  * Standard Bishop Piece

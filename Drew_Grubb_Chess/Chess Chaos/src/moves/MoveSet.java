@@ -3,7 +3,6 @@ package moves;
 import java.util.ArrayList;
 
 import boards.Board;
-import pieces.Piece;
 
 /**
  * Specialized List for the purpose of chess board additions

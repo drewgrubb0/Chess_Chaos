@@ -18,6 +18,7 @@ public class ChessBoard extends Board
 {
 	/**
 	 * Instantiates a Standard 8x8 ChessBoard
+	 * and sets all the pieces on the 2D Piece matrix
 	 */
 	public ChessBoard()
 	{
@@ -40,7 +41,6 @@ public class ChessBoard extends Board
 		setPiece(new Position(7, 0), new Rook(Piece.BLACK));
 		setPiece(new Position(7, 7), new Rook(Piece.WHITE));
 		
-		//Pawns
 		for(int x = 0 ; x < 8 ; x++)
 		{
 			setPiece(new Position(x, 1), new Pawn(Piece.BLACK));

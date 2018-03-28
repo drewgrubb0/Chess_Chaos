@@ -4,7 +4,17 @@ package d_utils;
  * A timer that uses system time to keep track of the passing of time.
  * 
  * Doesn't truly keep track of time but rather keeps track of the amount of time that has passed
- * since the creation of the DTimer. 
+ * since the starting of the DTimer, effectively marking elapsed time.
+ * 
+ * Is in charge of:
+ * - Returning the correct elapsed time when called
+ * - Not elapsing time when paused
+ * - Formatting time to 00:00
+ * 
+ * Is NOT in charge of:
+ * - Starting itself
+ * - Pausing itself
+ * - Displaying it's value anywhere
  * 
  * @author Drew Grubb
  */
@@ -16,7 +26,7 @@ public class DTimer
 	private boolean paused;
 	
 	/**
-	 * Creates new Timer
+	 * Creates new Timer without a reference time
 	 */
 	public DTimer()
 	{
@@ -38,7 +48,8 @@ public class DTimer
 	 * will be referenced to, but also starts the timer
 	 * at a specific time based on the passed in refTime.
 	 *
-	 * Useful for the saving and resuming of a timer across program shutdowns.
+	 * Useful for the saving and resuming of a timer across program shutdowns
+	 * or starting the timer at a specific time interval.
 	 *
 	 * @param refTime 
 	 */
@@ -49,8 +60,7 @@ public class DTimer
 	}
 	
 	/**
-	 * Gets the current time in reference to starting time
-	 * @return
+	 * @return the current time in reference to starting time
 	 */
 	public long getTime()
 	{
@@ -89,8 +99,7 @@ public class DTimer
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * @return is this timer currently paused
 	 */
 	public boolean isPaused()
 	{
@@ -99,7 +108,7 @@ public class DTimer
 	
 	/**
 	 * Returns the current time on the timer in Minutes : Seconds
-	 * Updates the time on every toString call
+	 * Updates the time on every toString call by design
 	 */
 	public String toString()
 	{
@@ -117,5 +126,4 @@ public class DTimer
 		
 		return "" + numMinutes + " : " + numSeconds;
 	}
-
 }

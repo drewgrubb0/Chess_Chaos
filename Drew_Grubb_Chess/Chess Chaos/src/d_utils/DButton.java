@@ -10,17 +10,27 @@ import java.awt.Rectangle;
  * Button class that works to simplify a lot of the menu displaying, text
  * positioning, and input checking with AWT throughout this program.
  * 
+ * Is in charge of:
+ * - Rendering button in correct location when called to.
+ * - When called, can see if a point is in it or if a point is clicking in it.
+ * - Centering text in the middle of the button.
+ * 
+ * Is NOT in charge of and should be handled further up:
+ * - Setting font sizes
+ * - Checking if it is being hovered within or clicked in by some sort of manager
+ * - Setting the correct render method to use
+ * - Establishing default dimensions and position
+ * 
  * @author Drew Grubb
  */
 public class DButton
 {
 	private int x, y;
 	private int width, height;
-
 	private String text; 
 	
 	/**
-	 * Creates a new DButton object
+	 * Creates a new DButton object with base values.
 	 */
 	public DButton()
 	{
@@ -34,7 +44,7 @@ public class DButton
 	}
 	
 	/**
-	 * Creates a new DButton object
+	 * Creates a new DButton object with Rectangular dimensions
 	 * @param Rect
 	 */
 	public DButton(Rectangle rect)
@@ -49,7 +59,7 @@ public class DButton
 	}
 	
 	/**
-	 * Creates a new DButton object
+	 * Creates a new DButton object with Rectangular dimensions
 	 * @param x
 	 * @param y
 	 * @param width
@@ -103,7 +113,7 @@ public class DButton
 	 * Useful for checking if a mouse is hovering over this button so an action can be performed.
 	 * 
 	 * @param point
-	 * @return 
+	 * @return is point p within the button dimensions
 	 */
 	public boolean isHovering(Point point)
 	{
@@ -124,7 +134,7 @@ public class DButton
 	 * Useful for checking if a mouse is clicking inside this button so an action can be performed.
 	 * @param point
 	 * @param isClicking
-	 * @return
+	 * @return is point p within the button dimensions while isClicking is true
 	 */
 	public boolean isClicking(Point point, boolean isClicking)
 	{
@@ -155,7 +165,7 @@ public class DButton
 	}
 	
 	/**
-	 * Draws this button to the screen in its filled (usually hovered) state
+	 * Draws this button to the screen in its hovered state
 	 * given a particular graphics object.
 	 * @param g
 	 */
@@ -173,8 +183,8 @@ public class DButton
 	}
 	
 	/**
-	 * Draws text to be centered in button based off font,
-	 * text length, text height.
+	 * Draws and centers the button text based off font,
+	 * text length, and text height.
 	 * @param g
 	 */
 	private void renderText(Graphics2D g)

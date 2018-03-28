@@ -10,10 +10,20 @@ import pieces.Piece;
 import pieces.PieceType;
 
 /**
- * Abstract class board used for the creation of new Chess Boards and
- * the checking for check, checkmate, and stalemate.
+ * Board class to be used for a variety of Chess game checking and maniupulating.
  * 
- * Renders board and pieces.
+ * Is in charge of:
+ * - Rendering the board and pieces.
+ * - Render's possible moves of a selected piece
+ * - Calculating the state of the board when directed.
+ * - Performing/Undoing moves when directed.
+ * - Keeping track of the current moves made within the game.
+ * 
+ * Is NOT in charge of:
+ * - Updating piece possiblemoves every turn unless called to do so.
+ * - Physically deciding which moves to perform
+ * - Deciding which piece to "select"
+ * - Ending/Starting the game
  *
  * @author Drew Grubb
  */
@@ -33,6 +43,8 @@ public class Board
 	
 	/**
 	 * Instantiates new Board and all board related objects
+	 * - Creates the physical 2D Piece matrix
+	 * - Creates the (empty) Stack of Moves made.
 	 *
 	 * @param length
 	 * @param height
@@ -47,37 +59,30 @@ public class Board
 	
 	/**
 	 * Performs actions required on a switched turn
+	 * - Update piece possible moves.
 	 */
 	public void switchTurn()
 	{
 		for (int x = 0; x < getLength(); x++) 
-        {
         	for (int y = 0; y < getHeight(); y++) 
-        	{
         		if(getPiece(new Position(x, y)) != null)
-        		{
- //           		getPiece(new Position(x, y)).setBoard(this);
             		getPiece(new Position(x, y)).updateMoveset();
-        		}
-        	}
-        }
 	}
 	
 	//EndGame Checks
 	
 	/**
-	 * Checks to see if the King of the given color is in Check by
-	 * checking through each piece's moveset to see if it can attack the king.
+	 * Checks to see if the king of the given color is in check by
+	 * checking through each piece's move set to see if it can attack the king.
 	 * @param currentTurnColor
+	 * @return whether or not the board is in a state of check
 	 */
 	public boolean isInCheck(int currentTurnColor)
 	{
 		Position kingPos = getKingPosition(currentTurnColor);
 		
 		for (int x = 0; x < getLength(); x++) 
-        {
         	for (int y = 0; y < getHeight(); y++) 
-        	{
         		if(getPiece(new Position(x, y)) != null)
         		{
             		if(!isFriendlyPiece(new Position(x, y), currentTurnColor))
@@ -88,8 +93,6 @@ public class Board
             			}
             		}
         		}
-        	}
-        }
         
         return false;
 	}
@@ -97,6 +100,7 @@ public class Board
 	/**
 	 * Checks to see if the King of the given color is in checkmate.
 	 * @param currentTurnColor
+	 * @return whether or not the board is in a state of checkmate
 	 */
 	public boolean isInCheckmate(int currentTurnColor)
 	{
@@ -106,6 +110,7 @@ public class Board
 	/**
 	 * Checks to see if the King of the given color is in stalemate.
 	 * @param currentTurnColor
+	 * @return whether or not the board is in a state of stalemate
 	 */
 	public boolean isInStalemate(int currentTurnColor)
 	{
@@ -113,8 +118,8 @@ public class Board
 	}
 	
 	/**
-	 * Checks to see if there are any pieces that can move of a given side.
-	 * @return
+	 * @param currentTurnColor
+	 * @return The colors ability to make a move on the board.
 	 */
 	private boolean canMove(int currentTurnColor)
 	{
@@ -138,7 +143,7 @@ public class Board
 	//Moves Modifying Actions
 	
 	/**
-	 * Performs necessary actions to move the piece on the board
+	 * Performs necessary actions to move the piece on the board and updates the Move Stack.
 	 * @param move
 	 */
 	public void performMove(Move move)
@@ -159,7 +164,7 @@ public class Board
 	}
 	
 	/**
-	 * Undoes the last move performed on the board
+	 * Undoes the last move performed on the board and updates the Move Stack.
 	 */
 	public void undoLastMove()
 	{
@@ -181,8 +186,8 @@ public class Board
 	//Various Value Checks
 	
 	/**
-	 * Checks to see if the given position is on the board
 	 * @param pos
+	 * @return is the given position on the board.
 	 */
 	public boolean isOnBoard(Position pos)
 	{
@@ -190,8 +195,8 @@ public class Board
 	}
 	
 	/**
-	 * Checks to see if the given position is occupied
 	 * @param pos
+	 * @return is the given position not occupied.
 	 */
 	public boolean isEmptySpace(Position pos)
 	{
@@ -199,9 +204,9 @@ public class Board
 	}
 	
 	/**
-	 * Checks to see if the given position is a part of pieceColor's team.
 	 * @param pos
 	 * @param pieceColor
+	 * @return is the piece at the given position part of pieceColor's team.
 	 */
 	public boolean isFriendlyPiece(Position pos, int pieceColor)
 	{
@@ -211,21 +216,17 @@ public class Board
 			if(getPiece(pos).getPieceColor() == Piece.NEUTRAL)
 				return true;
 			
-			//TODO
 			//Is piece on the same team
-			if(pieceColor == getPiece(pos).getPieceColor())
-			{
+			if(pieceColor % 2 == getPiece(pos).getPieceColor() % 2)
 				return true;
-			}
 		}
-		
 		return false;
 	}
 	
 	/**
-	 * Checks to see if the given position is not a part of pieceColor's team.
 	 * @param pos
 	 * @param pieceColor
+	 * @return is the piece at the given position not a part of pieceColor's team.
 	 */
 	public boolean isEnemyPiece(Position pos, int pieceColor)
 	{
@@ -233,12 +234,9 @@ public class Board
 	}
 	
 	/**
-	 * Checks to see if the given position can be moved to. This must clear several checks:
-	 * - Position is either empty or an enemy piece
-	 * - Position is on the board
 	 * @param pos
 	 * @param pieceColor
-	 * @return
+	 * @return is the position able to be moved to by the current color
 	 */
 	public boolean isAvailableSpace(Position pos, int pieceColor)
 	{
@@ -251,9 +249,8 @@ public class Board
 	 * Draws the Board to the screen.
 	 * Draws the Pieces to the screen.
 	 * If a piece is currently selected by a Player, 
-	 * highlights all possible moves that can be made.
-	 *
-	 * @param g
+	 * highlights all possible moves that can be made by that piece.
+	 * @param g graphics2d object
 	 */
 	public void renderBoard(Graphics2D g)
 	{
@@ -347,21 +344,33 @@ public class Board
 		return null;
 	}
 	
+	/**
+	 * @return the length of the board
+	 */
 	public int getLength() 
 	{
 		return boardLength;
 	}
 	
+	/**
+	 * @return the height of the board
+	 */
 	public int getHeight() 
 	{
 		return boardHeight;
 	}
 	
+	/**
+	 * @return the internal 2D Piece matrix
+	 */
 	public Piece[][] getBoard()
 	{
 		return board;
 	}
 	
+	/**
+	 * @return the Stack of Moves the game has gone through
+	 */
 	public Stack<Move> getMoves()
 	{
 		return moves;

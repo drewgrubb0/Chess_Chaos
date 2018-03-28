@@ -9,7 +9,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * Listener to be used with Display to get clicked mouse events and mouse position
+ * Class in charge of receiving and keeping track of input listener callbacks.
+ * 
+ * Is in charge of:
+ * - Keeping track of mouse point at all times.
+ * - Keeping track of mouse clicking at all times.
+ * 
+ * Is NOT in charge of:
+ * - Doing anything with this information.
+ * - Clearing this information unless called to do so.
  * 
  * @author Drew Grubb
  */
@@ -57,13 +65,13 @@ public class InputManager implements MouseListener, MouseMotionListener
 		isClicking = false;
 		mousePosition = e.getPoint();
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e){}
 	
 	@Override
-	public void mouseExited(MouseEvent e){}
-
+	public void mouseMoved(MouseEvent e)
+	{
+		mousePosition = e.getPoint();
+	}
+	
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
@@ -71,16 +79,22 @@ public class InputManager implements MouseListener, MouseMotionListener
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e)
-	{
-		mousePosition = e.getPoint();
-	}
+	public void mouseEntered(MouseEvent e){}
+	
+	@Override
+	public void mouseExited(MouseEvent e){}
 
+	/**
+	 * @return is mouse being clicked
+	 */
 	public boolean isClicking()
 	{
 		return isClicking;
 	}
 	
+	/**
+	 * @return current known mouse position
+	 */
 	public Point getMousePosition()
 	{
 		return mousePosition;

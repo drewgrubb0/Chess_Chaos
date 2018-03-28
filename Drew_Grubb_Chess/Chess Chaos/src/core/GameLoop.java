@@ -1,13 +1,8 @@
-/**
- * 
- */
 package core;
-
-import core.Display;
 
 /**
  * The core game loop of Chess Chaos that starts 
- * the display initialization and runs the game at 30TPS
+ * the display initialization and runs the game on a System timer at 30TPS.
  * 
  * @author Drew Grubb
  */
@@ -27,6 +22,7 @@ public class GameLoop
 	
 	/**
 	 * Initiates Game Loop and starts the display
+	 * If the game is already running for some reason, returns immediately.
 	 */
 	private static void start()
 	{
@@ -40,8 +36,11 @@ public class GameLoop
 	}
 
 	/**
-	 * Algorithm that works to update and render the game at 30 Ticks per Second
-	 * by using real world time intervals
+	 * Algorithm that works to run the game at 30 Ticks per Second
+	 * by using real world time intervals.
+	 * 
+	 * -Update Game Logic and Objects
+	 * -Render Game Objects
 	 */
 	public static void run()
 	{

@@ -1,6 +1,5 @@
 package boards;
 
-import gamestates.GameState;
 import moves.Position;
 import pieces.Bishop;
 import pieces.King;
@@ -11,6 +10,8 @@ import pieces.Queen;
 
 /**
  * Octagonal Chess Board setup
+ * Randomly designed by myself to be used for testing of different environments
+ * and neutral pieces IE solid "border" pieces.
  *
  * @author Drew Grubb
  */
@@ -25,7 +26,6 @@ public class OctoChessBoard extends Board
 	{	
 		super(8, 8);
 		
-		//Border Pieces
 		setPiece(new Position(0, 0), new Pawn(Piece.NEUTRAL));
 		setPiece(new Position(1, 0), new Pawn(Piece.NEUTRAL));
 		setPiece(new Position(6, 0), new Pawn(Piece.NEUTRAL));
@@ -45,7 +45,8 @@ public class OctoChessBoard extends Board
 		                            
 		setPiece(new Position(2, 5), new Pawn(Piece.NEUTRAL));
 		setPiece(new Position(5, 5), new Pawn(Piece.NEUTRAL));
-		                            
+		
+		
 		setPiece(new Position(2, 0), new Bishop(Piece.WHITE));
 		setPiece(new Position(2, 7), new Bishop(Piece.BLACK));
 		setPiece(new Position(5, 0), new Bishop(Piece.WHITE));

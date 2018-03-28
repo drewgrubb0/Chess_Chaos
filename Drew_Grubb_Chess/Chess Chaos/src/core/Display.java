@@ -55,7 +55,7 @@ public class Display extends Canvas
 	 */
 	public void createWindow()
 	{
-		frame = new JFrame("Chess by Drew Grubb");
+		frame = new JFrame("Chess Chaos by Drew Grubb");
 		
 		frame.setSize(width, height);
 		frame.setResizable(false);
@@ -64,6 +64,7 @@ public class Display extends Canvas
 		//Centers on Screen
 		frame.setLocationRelativeTo(null);
 		
+		//x ends the program
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.setVisible(true);
@@ -71,7 +72,7 @@ public class Display extends Canvas
 	}
 	
 	/**
-	 * Calls the GameStateManager update method
+	 * Calls the update method within the GameStateManager
 	 */
 	public void update()
 	{
@@ -80,9 +81,10 @@ public class Display extends Canvas
 	
 	/**
 	 * Creates the BufferStrategy and graphics library that will
-	 * be used to render to the JFrame, and
+	 * be used to render to the JFrame.
+	 * 
 	 * Draws from the graphics library into the JFrame,
-	 * calls render method from GameStateManager
+	 * calls the render method within the GameStateManager.
 	 */
 	public void render()
 	{
@@ -98,7 +100,7 @@ public class Display extends Canvas
 		g.fillRect(0, 0, width, height);
 		
 		//Set default Font
-		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 13));
 		
 		gameStateManager.renderCurrentState(g);
 		listener.clearInputCallbacks();

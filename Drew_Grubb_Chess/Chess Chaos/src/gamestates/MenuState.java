@@ -2,20 +2,29 @@ package gamestates;
 
 import java.awt.Graphics2D;
 
-import d_utils.DButton;
-
 /**
+ * GameState in charge of Menu traversal.
+ * 
+ * Is in charge of:
+ * - Rendering menu options.
+ * - Updating menu options based off user responses.
+ * - Checking for/responding to clicks.
+ * - Setting game values and switching to PlayState or SpectateState
+ * 
+ * Is NOT in charge of:
+ * - Rendering Boards/Pieces
+ * - Starting the game
  * 
  * @author Drew Grubb
  */
 public class MenuState implements GameState
 {
 	GameStateManager manager;
-
-	
 	
 	/**
-	 * 
+	 * Creates a new PlayState that handles menu traversal
+	 * - Sets default values
+	 * - Creates buttons
 	 *
 	 * @param gameStateManager
 	 */

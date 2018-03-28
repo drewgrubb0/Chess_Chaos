@@ -142,7 +142,6 @@ public class Pawn extends Piece
 		{
 			Move passantMove = new Move(currentPosition, new Position(pos.getPosX() + xVal, pos.getPosY() + yVal));
 			passantMove.setCapturedPiece(target);
-			System.out.println("--_-_" + passantMove.getCapturedPiece());
 			moveSet.tryMove(passantMove, needsVerification);
 		}
 	}

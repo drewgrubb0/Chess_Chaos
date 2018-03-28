@@ -2,13 +2,8 @@ package gamestates;
 
 import java.awt.Graphics2D;
 
-import core.Display;
-import d_utils.DButton;
-
 /**
- * Interface for the creation of new GameStates
- * For the purpose of Chess Chaos should only be used for
- * MenuState, PlayState, and SpectateState
+ * Interface for the creation of new GameStates to be used in conjunction with the GameStateManager.
  * 
  * @author Drew Grubb
  */

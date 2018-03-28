@@ -3,7 +3,6 @@ package gamestates;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.util.Stack;
 
 import boards.Board;
 import boards.ChessBoard;
@@ -35,6 +34,9 @@ public class PlayState implements GameState
 
 	/**
 	 * Creates a new PlayState that handles the state of the board
+	 * - Sets values
+	 * - Initializes timer
+	 * - Creates buttons
 	 * @param gameStateManager
 	 */
 	public PlayState(GameStateManager gameStateManager)
@@ -43,14 +45,23 @@ public class PlayState implements GameState
 		
 		gameTimer = new DTimer();
 		
-		buttons = new DButton[2];
+		buttons = new DButton[4];
+		
 		buttons[0] = new DButton();
-		buttons[0].setDimensions(650, 100, 100, 50);
+		buttons[0].setDimensions(525, 35, 250, 100);
 		buttons[0].setText("Pause");
 		
 		buttons[1] = new DButton();
-		buttons[1].setDimensions(650, 200, 100, 50);
+		buttons[1].setDimensions(525, 160, 250, 100);
 		buttons[1].setText("Undo");
+		
+		buttons[2] = new DButton();
+		buttons[2].setDimensions(525, 285, 250, 100);
+		buttons[2].setText("Reset");
+		
+		buttons[3] = new DButton();
+		buttons[3].setDimensions(525, 410, 250, 100);
+		buttons[3].setText("Quit to Menu");
 	}
 
 	@Override
@@ -105,19 +116,18 @@ public class PlayState implements GameState
 		g.drawString("" + gameTimer, 750, 15);
 		
 		//EndGame Rendering
+		
+		g.setFont(new Font("Calibri", Font.BOLD, 20));
 		if(losingColor != -2)
 		{
 			if(losingColor == -1)
-			{
-				g.setFont(new Font("Calibri", Font.BOLD, 20));
 				g.drawString("Stalemate! It's a draw!", 175, 20);
-			}
 			else
-			{
-				g.setFont(new Font("Calibri", Font.BOLD, 20));
-				g.drawString("Player " + (losingColor+1) + " Loses! Checkmate!", 175, 20);
-			}
+				g.drawString("Team " + ((losingColor / 2 ) + 1) + " Loses! Checkmate!", 175, 20);
 		}
+		else
+			if(board.isInCheck(currentTurnColor))
+				g.drawString("Check.", 240, 20);
 	}
 
 	@Override
@@ -138,6 +148,7 @@ public class PlayState implements GameState
 				buttons[buttonID].setText("Resume");
 			}
 		}
+		
 		if(buttonID == 1)
 		{
 			if(board.getMoves().size() > 0)
@@ -145,6 +156,16 @@ public class PlayState implements GameState
 				board.undoLastMove();
 				switchTurn(true);
 			}
+		}
+		
+		if(buttonID == 2)
+		{
+			init();
+		}
+		
+		if(buttonID == 3)
+		{
+			manager.setCurrentState(GameStateManager.MENU_STATE);
 		}
 	}
 	
@@ -193,8 +214,6 @@ public class PlayState implements GameState
 			setLoser(currentTurnColor);
 		if(board.isInStalemate(currentTurnColor))
 			setLoser(-1);
-		if(board.isInCheck(currentTurnColor))
-			System.out.println("Yer boi in Check");
 	}
 	
 	/**
