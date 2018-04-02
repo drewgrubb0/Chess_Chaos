@@ -12,7 +12,7 @@ To Do List for Chess Chaos
 - [x] 1. Introduction : March 13
 - [x] 2. Architecture : March 13
 - [x] 3. High-Level Design : March 15
-- [x] Diagram Creation : March 16 : Edit March 26
+- [x] Diagram Creation : March 16 : Edit March 26 : Edit April 1
 
 ***Source Code***
 - [x] Initial Commit : March 13
@@ -23,9 +23,9 @@ To Do List for Chess Chaos
 - [x] Player System : March 17
 - [x] GameStates and Buttons : March 27
 - [x] Piece PossibleMove methods : March 26
-- [ ] Artificial Intelligence
-- [x] Game Replaying : March 27
-- [ ] Demo Modes
+- [x] Artificial Intelligence : April 1 : [ ] Minimax AI
+- [x] Game Replaying : March 27 : [ ] Game saving for replay
+- [x] Demo Modes : April 1
 
 ***Test Plan***
 - [x] Initial Commit : March 26
