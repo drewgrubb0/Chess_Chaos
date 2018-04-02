@@ -102,7 +102,7 @@ public class Queen extends Piece
 	@Override
 	public int getPieceValue()
 	{
-		return 0;
+		return 90;
 	}
 
 }

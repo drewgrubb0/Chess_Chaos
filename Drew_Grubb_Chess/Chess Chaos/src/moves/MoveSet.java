@@ -74,9 +74,9 @@ public class MoveSet
 	}
 	
 	/**
-	 * Checks to see if an origin position exists in the moveset.
-	 * @param pos
-	 * @return
+	 * Checks to see if an origin position exists in the move set.
+	 * @param pos being searched for.
+	 * @return does position exist in move set.
 	 */
 	public boolean containsPrev(Position pos)
 	{
@@ -88,8 +88,8 @@ public class MoveSet
 	
 	/**
 	 * Checks to see if a destination position exists in the current moveset.
-	 * @param pos
-	 * @return
+	 * @param pos destination being searched for
+	 * @return if the destination exists in the move set.
 	 */
 	public boolean containsDest(Position pos)
 	{
@@ -97,6 +97,17 @@ public class MoveSet
 			if(move.getNewPosition().equals(pos))
 				return true;
 		return false;
+	}
+	
+	/**
+	 * Returns the move at the specific index in the move set.
+	 * Used for Artificial Intelligence move calculations.
+	 * @param index
+	 * @return the move at the index
+	 */
+	public Move getMove(int index)
+	{
+		return moves.get(index);
 	}
 
 	/**

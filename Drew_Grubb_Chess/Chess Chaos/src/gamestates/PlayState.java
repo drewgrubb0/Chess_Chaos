@@ -4,33 +4,24 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import boards.Board;
-import boards.ChessBoard;
+import core.Game;
 import d_utils.DButton;
 import d_utils.DTimer;
-import moves.Move;
-import pieces.Piece;
-import players.Human;
-import players.Player;
 
 /**
- * PlayState handles the state of the board as well as any in game buttons.
- * Updates player turn system
+ * PlayState handles the state of the game GUI buttons as well as calling and
+ * keeping track of the Game class to update the state of the game.
  * @author Drew Grubb
  */
 public class PlayState implements GameState
 {
-	GameStateManager manager;
+	private GameStateManager manager;
 	
-	DButton buttons[];
-	DTimer gameTimer;
+	private Game game;
+	private DButton buttons[];
+	private DTimer gameTimer;
 	
-	Board board;
-	Player players[];
-	int currentTurnColor;
-	
-	boolean isPaused;
-	int losingColor = -2;
+	private boolean isPaused;
 
 	/**
 	 * Creates a new PlayState that handles the state of the board
@@ -67,18 +58,13 @@ public class PlayState implements GameState
 	@Override
 	public void init()
 	{
-		board = new ChessBoard();
-		board.switchTurn();
+		if(game == null)
+			manager.setCurrentState(GameStateManager.MENU_STATE);
 		
-		players = new Player[2];
-		players[0] = new Human(board, manager.getInputManager(), Piece.WHITE);
-		players[1] = new Human(board, manager.getInputManager(), Piece.BLACK);
+		game.startGame();
 		
-		currentTurnColor = 0;
-		
-		gameTimer.startTimer();
 		isPaused = false;
-		losingColor = -2;
+		gameTimer.startTimer();
 	}
 
 	@Override
@@ -89,21 +75,20 @@ public class PlayState implements GameState
 			if(buttons[x].isClicking(manager.getInputManager().getMousePosition(), manager.getInputManager().isClicking()))
 				performButtonAction(x);
 		
-		if(isPaused == false)
-		{
-			players[currentTurnColor].calculatePossibleMove();
-		}
 		
-		//Player Input/Calculations block
-		if(players[currentTurnColor].hasDecidedMove())
-			makeMove(players[currentTurnColor].getDecidedMove());
-		board.setSelectedPiece(players[currentTurnColor].getSelectedPiece());
+		if(isPaused == false && (game.getStateOfGame() != Game.STATE_DONE))
+			game.updateGame();
+		
+		if(game.getStateOfGame() == Game.STATE_DONE)
+			gameTimer.pauseTimer();
 	}
 
 	@Override
 	public void render(Graphics2D g)
 	{
-		board.renderBoard(g);
+		game.renderBoard(g);
+		
+		//Render buttons
 		
 		g.setColor(Color.GREEN);
 		
@@ -113,21 +98,26 @@ public class PlayState implements GameState
 			else 
 				buttons[x].render(g);
 		
+		//Render timers
 		g.drawString("" + gameTimer, 750, 15);
 		
 		//EndGame Rendering
 		
 		g.setFont(new Font("Calibri", Font.BOLD, 20));
-		if(losingColor != -2)
+		
+		if(game.getStateOfGame() == Game.STATE_CHECK)
+			g.drawString("Check.", 240, 20);
+		
+		if(game.getStateOfGame() == Game.STATE_DONE)
 		{
-			if(losingColor == -1)
-				g.drawString("Stalemate! It's a draw!", 175, 20);
-			else
-				g.drawString("Team " + ((losingColor / 2 ) + 1) + " Loses! Checkmate!", 175, 20);
+			if(game.getWinner() != -2)
+			{
+				if(game.getWinner() == -1)
+					g.drawString("Stalemate! It's a draw!", 175, 20);
+				else
+					g.drawString("Team " + ((game.getWinner() % 2) + 1) + " Wins! Checkmate!", 175, 20);
+			}
 		}
-		else
-			if(board.isInCheck(currentTurnColor))
-				g.drawString("Check.", 240, 20);
 	}
 
 	@Override
@@ -151,11 +141,7 @@ public class PlayState implements GameState
 		
 		if(buttonID == 1)
 		{
-			if(board.getMoves().size() > 0)
-			{
-				board.undoLastMove();
-				switchTurn(true);
-			}
+			game.undoLastMove();
 		}
 		
 		if(buttonID == 2)
@@ -170,66 +156,11 @@ public class PlayState implements GameState
 	}
 	
 	/**
-	 * Makes a move from point A to point B and switches the turn
-	 * Adds move to the playing stack for save-ability and replaying.
+	 * Sets game to update and draw information from
+	 * @param game
 	 */
-	public void makeMove(Move move)
+	public void setGame(Game game)
 	{
-		board.performMove(move);
-		switchTurn(false);
-	}
-
-	/**
-	 * Performs any action that happens on the switching of a turn.
-	 * This includes:
-	 * Updating King Position
-	 * Updating isInCheck
-	 * Updating isInCheckmate
-	 * Updating isInStalemate
-	 * Changing player control
-	 * Updating player boards/selected pieces/moves
-	 */
-	public void switchTurn(boolean isUndoing)
-	{		
-		board.switchTurn();
-		
-		//Actual Changing of Player control
-		
-		if(isUndoing)
-		{
-			currentTurnColor--;
-			if(currentTurnColor < 0)
-				currentTurnColor = 1;
-		}
-		else
-		{
-			currentTurnColor++;
-			if(currentTurnColor >= players.length)
-				currentTurnColor = 0;
-		}
-		
-		players[currentTurnColor].activateTurn(board);
-		
-		if(board.isInCheckmate(currentTurnColor))
-			setLoser(currentTurnColor);
-		if(board.isInStalemate(currentTurnColor))
-			setLoser(-1);
-	}
-	
-	/**
-	 * Sets losing color to whichever player lost
-	 * Sets losing color to -1 if a stalemate occurs.
-	 * 
-	 * Also pauses in game timers and sets the board to
-	 * paused so moves cannot be made.
-	 * Potential bug: unpausing the game while losing and making moves
-	 *
-	 * @param color
-	 */
-	public void setLoser(int color)
-	{
-		losingColor = color;
-		gameTimer.pauseTimer();
-		isPaused = true;
+		this.game = game;
 	}
 }

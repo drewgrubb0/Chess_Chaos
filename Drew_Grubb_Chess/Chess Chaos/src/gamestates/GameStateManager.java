@@ -47,7 +47,7 @@ public class GameStateManager
 		states[1] = new PlayState(this);
 		states[2] = new ReplayState(this);
 		
-		setCurrentState(2);
+		setCurrentState(0);
 	}
 	
 	/**
@@ -65,6 +65,16 @@ public class GameStateManager
 	public void renderCurrentState(Graphics2D g)
 	{
 		states[currentState].render(g);
+	}
+	
+	/**
+	 * Clean way to grab states within the manager for editing.
+	 * Used by the MenuState to slowly construct properties of the game being set up.
+	 * @return the state asked for using the final GameStateManager IDs.
+	 */
+	public GameState getState(int stateID)
+	{
+		return states[stateID];
 	}
 
 	/**

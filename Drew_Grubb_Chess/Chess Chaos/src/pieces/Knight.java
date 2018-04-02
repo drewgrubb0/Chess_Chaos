@@ -63,7 +63,7 @@ public class Knight extends Piece
 	@Override
 	public int getPieceValue()
 	{
-		return 0;
+		return 30;
 	}
 
 }

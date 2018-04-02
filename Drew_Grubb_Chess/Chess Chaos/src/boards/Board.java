@@ -121,7 +121,7 @@ public class Board
 	 * @param currentTurnColor
 	 * @return The colors ability to make a move on the board.
 	 */
-	private boolean canMove(int currentTurnColor)
+	public boolean canMove(int currentTurnColor)
 	{
 		for (int x = 0; x < getLength(); x++) 
 		{

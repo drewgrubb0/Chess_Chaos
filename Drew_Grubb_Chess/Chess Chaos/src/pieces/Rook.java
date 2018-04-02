@@ -69,7 +69,7 @@ public class Rook extends Piece
 	@Override
 	public int getPieceValue()
 	{
-		return 0;
+		return 50;
 	}
 
 }

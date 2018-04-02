@@ -7,16 +7,17 @@ import moves.Position;
 import pieces.Piece;
 
 /**
- * 
+ * Chess Player that takes the role of the "Human" player, also known as the user.
+ * Receives input through an input manager.
  *
  * @author Drew Grubb
  */
 public class Human extends Player
 {
-	InputManager input;
+	private InputManager input;
 
 	/**
-	 * 
+	 * Initializes Human Player
 	 *
 	 * @param board
 	 * @param input
@@ -29,7 +30,7 @@ public class Human extends Player
 	}
 
 	@Override
-	public void calculatePossibleMove()
+	public void calculateMove()
 	{
 		int x = -1;
 		int y = -1;

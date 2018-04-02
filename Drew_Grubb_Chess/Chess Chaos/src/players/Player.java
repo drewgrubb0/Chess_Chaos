@@ -24,7 +24,7 @@ public abstract class Player
 		decidedMove = null;
 	}
 	
-	public abstract void calculatePossibleMove();
+	public abstract void calculateMove();
 	
 	public boolean hasDecidedMove()
 	{
