@@ -20,10 +20,10 @@ package d_utils;
  */
 public class DTimer
 {
-	private long referenceTime;
-	private long lastKnownTime;
+	protected long referenceTime;
+	protected long lastKnownTime;
 	
-	private boolean paused;
+	protected boolean paused;
 	
 	/**
 	 * Creates new Timer without a reference time

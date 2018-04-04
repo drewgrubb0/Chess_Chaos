@@ -1,13 +1,17 @@
 package moves;
 
+import java.io.Serializable;
+
 /**
  * Provides readability and comparability for Piece location on the board
  * Mostly used for keeping track of moves
  * 
  * @author Drew Grubb
  */
-public class Position
+public class Position implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int posX;
 	private int posY;
 

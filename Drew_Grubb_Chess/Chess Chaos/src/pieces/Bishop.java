@@ -13,6 +13,7 @@ import moves.MoveSet;
  */
 public class Bishop extends Piece
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Instantiates new Bishop

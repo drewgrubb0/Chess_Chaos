@@ -16,6 +16,10 @@ import pieces.Rook;
  */
 public class ChessBoard extends Board
 {
+	private static final long serialVersionUID = 1L;
+	
+	public static final String BOARD_NAME = "ChessBoard";
+	
 	/**
 	 * Instantiates a Standard 8x8 ChessBoard
 	 * and sets all the pieces on the 2D Piece matrix
@@ -47,5 +51,10 @@ public class ChessBoard extends Board
 			setPiece(new Position(x, 6), new Pawn(Piece.WHITE));
 		}	
 	}
-
+	
+	@Override
+	public String toString()
+	{
+		return BOARD_NAME;
+	}
 }

@@ -3,23 +3,29 @@ package gamestates;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Stack;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import boards.Board;
 import boards.ChessBoard;
+import boards.ChessBoard4P;
+import boards.OctoChessBoard;
+import boards.RandomBoard;
 import d_utils.DButton;
 import d_utils.DTimer;
 import moves.Move;
 
 /**
  * GameState in charge of replaying a game in a spectator view using a specific
- * .chao file. Player can watch the game move by move or automatically.
+ * .Chaos file. Player can watch the game move by move or automatically.
  * 
  * Is in charge of:
+ * - Loading the .Chaos file based on user file choosing.
  * - Replaying the given game move by move
  * - Changing the speed of the replay on player request
  * 
@@ -92,11 +98,7 @@ public class ReplayState implements GameState
 	@Override
 	public void init()
 	{
-		//TODO set up board based on file name
-		board = new ChessBoard();
-		
-//		if(loadReplayFile(replayFile) == false)
-//			manager.setCurrentState(GameStateManager.MENU_STATE);
+		loadReplayFile();
 		
 		moveDelayMS = 1000;
 		isPaused = false;
@@ -143,6 +145,9 @@ public class ReplayState implements GameState
 		
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
 		g.drawString("Replaying game from " + replayFile, 30, 545);
+		
+		if(movesLeft.size() <= 0)
+			g.drawString("Replay has ended.", 30, 20);
 	}
 
 	@Override
@@ -179,8 +184,8 @@ public class ReplayState implements GameState
 		{
 			if(movesLeft.size() > 0)
 			{
+				board.performMove(movesLeft.peek());
 				movesMade.push(movesLeft.pop());
-				board.undoLastMove();
 			}
 		}
 		
@@ -188,8 +193,8 @@ public class ReplayState implements GameState
 		{
 			if(movesMade.size() > 0)
 			{
+				board.undoLastMove();
 				movesLeft.push(movesMade.pop());
-				board.performMove(movesMade.peek());
 			}
 		}
 		
@@ -200,39 +205,67 @@ public class ReplayState implements GameState
 	}
 	
 	/**
-	 * Uses ObjectInputStream to read from the .chao file to perform the following:
+	 * Uses ObjectInputStream to read from the .Chaos file to perform the following:
 	 * Loads the Move Stack from the file and reverses it into the ReplayState Move Stack.
 	 * @param path
 	 * @return successfulness of the loading
 	 */
-	public boolean loadReplayFile(String path)
+	public void loadReplayFile()
 	{
-		try{
-			ObjectInputStream reader = new ObjectInputStream(new FileInputStream(new File(path)));
-			
-			@SuppressWarnings("unchecked")
-			Stack<Move> moveSet = (Stack<Move>) reader.readObject();
-			
-			//Places moves in backwards because Move Stack is saved with the last move on the top of the stack
-			while(moveSet.size() > 0)
-				movesLeft.push(moveSet.pop());
-			
-			reader.close();
-			
-		} catch(IOException | ClassNotFoundException e){
-			e.printStackTrace();
-			return false;
-		}
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Chess Chaos Replay Files", "Chaos"));
 		
-		return true;
+		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+		{
+			try{
+				ObjectInputStream reader = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+				
+				replayFile = chooser.getSelectedFile().toString();
+				board = loadBoard(reader.readUTF(), reader);
+				
+				@SuppressWarnings("unchecked")
+				Stack<Move> moveSet = (Stack<Move>) reader.readObject();
+				
+				//Places moves in backwards because Move Stack is saved with the last move on the top of the stack
+				while(moveSet.size() > 0)
+					movesLeft.push(moveSet.pop());
+				
+				reader.close();
+				
+			} catch(IOException | ClassNotFoundException e){
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			manager.setCurrentState(GameStateManager.MENU_STATE);
+		}
 	}
 	
 	/**
-	 * Sets the game file to be loaded up upon ReplayState initialization
+	 * Loads the correct board type for the replay based on the contents
+	 * within the .Chaos file. Could potentially cause issues if someone
+	 * manually changes the contents of the file, but that can't really
+	 * be prevented.
+	 * @param boardType 
+	 * @param reader 
+	 * @return 
+	 * @throws IOException 
 	 */
-	public void setGameFile(String replayFile)
-	{
-		this.replayFile = replayFile;
+	public Board loadBoard(String boardType, ObjectInputStream reader) throws IOException
+	{	
+		switch(boardType)
+		{
+			case ChessBoard.BOARD_NAME:
+				return new ChessBoard();
+			case OctoChessBoard.BOARD_NAME:
+				return new OctoChessBoard();
+			case ChessBoard4P.BOARD_NAME:
+				return new ChessBoard4P();
+			case RandomBoard.BOARD_NAME:
+				return new RandomBoard(reader.readLong());
+			default:
+				return new ChessBoard();
+		}
 	}
-
 }

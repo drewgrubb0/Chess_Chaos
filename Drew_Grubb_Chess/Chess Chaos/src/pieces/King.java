@@ -14,7 +14,8 @@ import moves.MoveSet;
  */
 public class King extends Piece
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Instantiates new King
 	 * @param pieceColor

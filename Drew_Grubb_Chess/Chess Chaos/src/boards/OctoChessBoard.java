@@ -17,7 +17,10 @@ import pieces.Queen;
  */
 public class OctoChessBoard extends Board
 {
-
+	private static final long serialVersionUID = 1L;
+	
+	public static final String BOARD_NAME = "OctoChessBoard";
+	
 	/**
 	 * Sets up octagonal chess board with solid neutral pieces as the border
 	 * @param playState 
@@ -67,5 +70,10 @@ public class OctoChessBoard extends Board
 		setPiece(new Position(4, 2), new Pawn(Piece.BLACK));
 		setPiece(new Position(4, 5), new Pawn(Piece.WHITE));
 	}
-
+	
+	@Override
+	public String toString()
+	{
+		return BOARD_NAME;
+	}
 }

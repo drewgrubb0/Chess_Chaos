@@ -2,6 +2,7 @@ package boards;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.Stack;
 
 import moves.Move;
@@ -27,8 +28,10 @@ import pieces.PieceType;
  *
  * @author Drew Grubb
  */
-public class Board
+public class Board implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	public static final int TILESIZE = 60;
 	public static final int BOARD_X_OFFSET = 30;
 	public static final int BOARD_Y_OFFSET = 30;
@@ -45,7 +48,7 @@ public class Board
 	 * Instantiates new Board and all board related objects
 	 * - Creates the physical 2D Piece matrix
 	 * - Creates the (empty) Stack of Moves made.
-	 *
+	 * 
 	 * @param length
 	 * @param height
 	 */
@@ -153,12 +156,13 @@ public class Board
 		if(tempPiece == null)
 			move.setCapturedPiece(getPiece(move.getNewPosition()));
 		else
-			setPiece(tempPiece.getPosition(), null); //En Passant
+			setPiece(tempPiece.getPosition(), null);
 		
 		setPiece(move.getNewPosition(), getPiece(move.getPreviousPosition()));
 		setPiece(move.getPreviousPosition(), null);
 		
-		getPiece(move.getNewPosition()).increaseNumMoves();
+		if(getPiece(move.getNewPosition()) != null)
+			getPiece(move.getNewPosition()).increaseNumMoves();
 		
 		moves.add(move);
 	}

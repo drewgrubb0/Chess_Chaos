@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
@@ -19,8 +20,10 @@ import moves.Position;
  * 
  * @author Drew Grubb
  */
-public abstract class Piece
+public abstract class Piece implements Serializable
 {	
+	private static final long serialVersionUID = 1L;
+	
 	public static final int NEUTRAL = -1;
 	public static final int WHITE = 0;
 	public static final int BLACK = 1;
@@ -31,11 +34,13 @@ public abstract class Piece
 	protected PieceType pieceType;
 	protected Position currentPosition;
 	
-	protected BufferedImage image;
+	//Transient because BufferedImages are not Serializable
+	transient protected BufferedImage image;
 	protected int numMovesMade;
 	
 	protected Board board;
-	protected MoveSet moveSet;
+	//Transient because MoveSets are not required for Replays
+	transient protected MoveSet moveSet;
 	
 	/**
 	 * Creates a new piece in the given position

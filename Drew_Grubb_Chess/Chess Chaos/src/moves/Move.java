@@ -1,5 +1,7 @@
 package moves;
 
+import java.io.Serializable;
+
 import pieces.Piece;
 
 /**
@@ -10,8 +12,10 @@ import pieces.Piece;
  *
  * @author Drew Grubb
  */
-public class Move
+public class Move implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private Position prevPos;
 	private Position newPos;
 	private Piece capturedPiece;

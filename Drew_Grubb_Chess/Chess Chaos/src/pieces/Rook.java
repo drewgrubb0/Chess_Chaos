@@ -13,7 +13,8 @@ import moves.MoveSet;
  */
 public class Rook extends Piece
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Instantiates new Pawn
 	 * @param pieceColor

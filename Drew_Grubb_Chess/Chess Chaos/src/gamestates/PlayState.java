@@ -3,6 +3,12 @@ package gamestates;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import core.Game;
 import d_utils.DButton;
@@ -80,7 +86,10 @@ public class PlayState implements GameState
 			game.updateGame();
 		
 		if(game.getStateOfGame() == Game.STATE_DONE)
+		{
 			gameTimer.pauseTimer();
+			buttons[0].setText("Save Replay");
+		}
 	}
 
 	@Override
@@ -106,7 +115,7 @@ public class PlayState implements GameState
 		g.setFont(new Font("Calibri", Font.BOLD, 20));
 		
 		if(game.getStateOfGame() == Game.STATE_CHECK)
-			g.drawString("Check.", 240, 20);
+			g.drawString("Check.", 30, 20);
 		
 		if(game.getStateOfGame() == Game.STATE_DONE)
 		{
@@ -123,19 +132,36 @@ public class PlayState implements GameState
 	@Override
 	public void performButtonAction(int buttonID)
 	{
-		if(buttonID == 0) //Pause/Resume Button
+		if(buttonID == 0)
 		{
-			if(isPaused)
-			{
-				buttons[buttonID].setText("Pause");
-				isPaused = false;
-				gameTimer.resumeTimer();
+			//Becomes a "Save Replay" button when the game is over
+			if(game.getStateOfGame() == Game.STATE_DONE)
+			{			
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				
+				if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+				{
+					String file = JOptionPane.showInputDialog("Please input the name you would like for the replay file");
+					
+					game.saveReplay(fileChooser.getSelectedFile(), file);
+				}
+				
 			}
-			else
+			else // Pause/Resume Button
 			{
-				gameTimer.pauseTimer();
-				isPaused = true;
-				buttons[buttonID].setText("Resume");
+				if(isPaused)
+				{
+					buttons[buttonID].setText("Pause");
+					isPaused = false;
+					gameTimer.resumeTimer();
+				}
+				else
+				{
+					gameTimer.pauseTimer();
+					isPaused = true;
+					buttons[buttonID].setText("Resume");
+				}
 			}
 		}
 		

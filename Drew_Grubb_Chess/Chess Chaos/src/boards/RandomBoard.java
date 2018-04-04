@@ -15,12 +15,19 @@ import pieces.Rook;
  * Octagonal Chess Board setup
  * Randomly designed by myself to be used for testing of different environments
  * and neutral pieces IE solid "border" pieces.
+ * 
+ * Due to the nature of Random, it is important to keep track of the seed used in case a replay
+ * is made using this board. This ensures that when the replay is run, the correct board setup
+ * is used.
  *
  * @author Drew Grubb
  */
 public class RandomBoard extends Board
 {
-	Random random;
+	private static final long serialVersionUID = 1L;
+	
+	public static final String BOARD_NAME = "RandomBoard";
+	private long randomSeed;
 
 	/**
 	 * Sets up octagonal chess board with solid neutral pieces as the border
@@ -29,9 +36,21 @@ public class RandomBoard extends Board
 	public RandomBoard()
 	{	
 		super(8, 8);
-		random = new Random();
+		randomSeed = System.currentTimeMillis();
+		randomizeBoard(randomSeed);
+	}
+	
+	public RandomBoard(long seed)
+	{
+		super(8, 8);
+		randomizeBoard(seed);
+	}
+	
+	public void randomizeBoard(long seed)
+	{
+		Random random = new Random(seed);
 		int type = 0;
-			
+		
 		for(int x = 0 ; x < 8 ; x++)
 		{
 			for(int y = 0 ; y < 8 ; y++)
@@ -92,4 +111,17 @@ public class RandomBoard extends Board
 		setPiece(new Position(random.nextInt(8), random.nextInt(2) + 6), new King(Piece.WHITE));
 	}
 
+	/**
+	 * @return the seed used to create this board
+	 */
+	public long getSeed()
+	{
+		return randomSeed;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return BOARD_NAME;
+	}
 }

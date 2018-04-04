@@ -1,9 +1,14 @@
 package core;
 
 import java.awt.Graphics2D;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import boards.Board;
 import boards.ChessBoard;
+import boards.ChessBoard4P;
 import boards.OctoChessBoard;
 import boards.RandomBoard;
 import input.InputManager;
@@ -30,7 +35,7 @@ public class Game
 	public static final int STATE_DONE = 2;
 	
 	public static final int TYPE_CASUAL = 0;
-	public static final int TYPE_TIMED = 1;
+	public static final int TYPE_SPEED = 1;
 	
 	private Board board;
 	private int boardType;
@@ -54,11 +59,14 @@ public class Game
 	 */
 	public Game(InputManager manager)
 	{
-		this.boardType = BOARD_CHESS;
+		this.boardType = BOARD_4PLAYER;
 		
-		players = new Player[2];
+		players = new Player[4];
 		setUpPlayer(0, "Human", manager);
 		setUpPlayer(1, "Human", manager);
+		
+		setUpPlayer(2, "Human", manager);
+		setUpPlayer(3, "Human", manager);
 	}
 	
 	public void startGame()
@@ -73,8 +81,7 @@ public class Game
 				board = new OctoChessBoard();
 			break;
 			case BOARD_4PLAYER:
-				//TODO make 4player board
-				board = new ChessBoard();
+				board = new ChessBoard4P();
 			break;
 			case BOARD_RANDOM:
 				board = new RandomBoard();
@@ -191,6 +198,35 @@ public class Game
 		{
 			gameWinner = -1;
 			stateOfGame = STATE_DONE;
+		}
+	}
+	
+	/**
+	 * Saves the replay of this file (Basically just the Move stack) to
+	 * the given directory in a .Chaos file (glorified text file).
+	 * @param selectedFile
+	 */
+	public void saveReplay(File selectedFile, String fileName)
+	{
+		try
+		{
+			FileOutputStream fileOutputStream = new FileOutputStream(selectedFile + "/" + fileName + ".Chaos");
+			ObjectOutputStream out = new ObjectOutputStream(fileOutputStream);
+			
+			out.writeUTF(board.toString());
+			
+			if(board.toString().equals("RandomBoard"))
+			{
+				out.writeLong(((RandomBoard) board).getSeed());
+			}
+			
+			out.writeObject(board.getMoves());
+			
+			out.close();
+			
+		}catch(IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 	
