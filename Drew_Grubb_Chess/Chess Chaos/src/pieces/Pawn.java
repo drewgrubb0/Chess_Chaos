@@ -112,8 +112,8 @@ public class Pawn extends Piece
 	private void tryPassant(Position pos, MoveSet moveSet, boolean needsVerification)
 	{
 		//Checks to see if adjacent piece is a Pawn
-		Piece target = board.getPiece(pos);
 		
+		Piece target = board.getPiece(pos);
 		if(target == null || board.isEnemyPiece(pos, getPieceColor()) == false)
 			return;
 		if(target.getPieceType() != PieceType.PAWN)

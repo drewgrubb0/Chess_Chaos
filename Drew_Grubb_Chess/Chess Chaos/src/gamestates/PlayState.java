@@ -3,12 +3,9 @@ package gamestates;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import core.Game;
 import d_utils.DButton;
@@ -154,12 +151,14 @@ public class PlayState implements GameState
 				{
 					buttons[buttonID].setText("Pause");
 					isPaused = false;
+					game.resumeCurrentTimer();
 					gameTimer.resumeTimer();
 				}
 				else
 				{
 					gameTimer.pauseTimer();
 					isPaused = true;
+					game.pauseCurrentTimer();
 					buttons[buttonID].setText("Resume");
 				}
 			}
@@ -167,7 +166,10 @@ public class PlayState implements GameState
 		
 		if(buttonID == 1)
 		{
-			game.undoLastMove();
+			if(game.getType() == Game.TYPE_CASUAL)
+				game.undoLastMove();
+			else
+				buttons[1].setText("Cannot undo in Speed Chess");
 		}
 		
 		if(buttonID == 2)

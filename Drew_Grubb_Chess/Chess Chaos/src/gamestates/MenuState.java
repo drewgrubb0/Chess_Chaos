@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 
 import core.Game;
 import d_utils.DButton;
-import d_utils.DCountdownTimer;
 
 /**
  * GameState in charge of Menu traversal.

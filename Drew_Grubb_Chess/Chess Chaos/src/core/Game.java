@@ -1,5 +1,7 @@
 package core;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,6 +13,7 @@ import boards.ChessBoard;
 import boards.ChessBoard4P;
 import boards.OctoChessBoard;
 import boards.RandomBoard;
+import d_utils.DCountdownTimer;
 import input.InputManager;
 import moves.Move;
 import players.Human;
@@ -45,6 +48,9 @@ public class Game
 	private int gameWinner = -2;
 	private int stateOfGame;
 	
+	private int gameType = 0;
+	private DCountdownTimer[] timers;
+	
 	/**
 	 * Constructor that sets up all default game values
 	 */
@@ -59,14 +65,13 @@ public class Game
 	 */
 	public Game(InputManager manager)
 	{
-		this.boardType = BOARD_4PLAYER;
+		this.boardType = BOARD_CHESS;
 		
-		players = new Player[4];
+		players = new Player[2];
 		setUpPlayer(0, "Human", manager);
 		setUpPlayer(1, "Human", manager);
 		
-		setUpPlayer(2, "Human", manager);
-		setUpPlayer(3, "Human", manager);
+		gameType = 1;
 	}
 	
 	public void startGame()
@@ -91,6 +96,14 @@ public class Game
 			break;
 		}
 		
+		if(gameType == TYPE_SPEED)
+		{
+			timers = new DCountdownTimer[players.length];
+			
+			for(int x = 0 ; x < timers.length ; x++)
+				timers[x] = new DCountdownTimer(300000);
+		}
+		
 		gameWinner = -2;
 		stateOfGame = STATE_PLAYING;
 		currentTurnColor = -1;
@@ -103,9 +116,19 @@ public class Game
 	 * dealing with Player input/calculations, and determining winners.
 	 */
 	public void updateGame()
-	{
-		//Overridden by CHECK or DONE if they are in those respective states
-		stateOfGame = STATE_PLAYING;
+	{		
+		if(gameType == TYPE_SPEED)
+		{
+			if(timers[currentTurnColor].getTime() <= 0)
+			{
+				stateOfGame = STATE_DONE;
+				
+				if(currentTurnColor % 2 == 0)
+					gameWinner = 1;
+				else
+					gameWinner = 2;
+			}
+		}
 		
 		players[currentTurnColor].calculateMove();
 		
@@ -122,6 +145,16 @@ public class Game
 	public void renderBoard(Graphics2D g)
 	{
 		board.renderBoard(g);
+		
+		g.setColor(Color.GREEN);
+		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 13));
+		
+		if(gameType == TYPE_SPEED)
+			for(int x = 0 ; x < players.length ; x++)
+			{
+				g.drawString("Player " + x + " timer", 50 + (120 * x), 530);
+				g.drawString(timers[x] + "", 70 + (120*x), 560);
+			}
 	}
 	
 	/**
@@ -170,19 +203,29 @@ public class Game
 				currentTurnColor = 1;
 		}
 		else
-		{
+		{	
+			if(gameType == TYPE_SPEED && currentTurnColor >= 0)
+				timers[currentTurnColor].pauseTimer();
+			
 			currentTurnColor++;
 			if(currentTurnColor >= players.length)
 				currentTurnColor = 0;
+			
+			if(gameType == TYPE_SPEED)
+			{
+				if(timers[currentTurnColor].getTime() == timers[currentTurnColor].getStartingTime())
+					timers[currentTurnColor].startTimer();
+				else
+					timers[currentTurnColor].resumeTimer();
+			}
 		}
 		
 		players[currentTurnColor].activateTurn(board);
 		
 		if(board.isInCheck(currentTurnColor))
-		{
-			//CHECK overidden by DONE if board is in a state of Checkmate
 			stateOfGame = STATE_CHECK;
-		}
+		else
+			stateOfGame = STATE_PLAYING;
 		
 		if(board.isInCheckmate(currentTurnColor))
 		{
@@ -233,6 +276,24 @@ public class Game
 	///////////SETTERS
 	
 	/**
+	 * Pauses the current timer
+	 */
+	public void pauseCurrentTimer()
+	{
+		if(gameType == TYPE_SPEED)
+			timers[currentTurnColor].pauseTimer();
+	}
+	
+	/**
+	 * Resumes the current timer
+	 */
+	public void resumeCurrentTimer()
+	{
+		if(gameType == TYPE_SPEED)
+			timers[currentTurnColor].resumeTimer();
+	}
+	
+	/**
 	 * Sets up type of board that this game will be played on.
 	 * @param boardChess
 	 */
@@ -275,6 +336,14 @@ public class Game
 	public int getWinner()
 	{
 		return gameWinner;
+	}
+	
+	/**
+	 * @return gets the current game type
+	 */
+	public int getType()
+	{
+		return gameType;
 	}
 	
 	/**

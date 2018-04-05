@@ -181,10 +181,10 @@ public class Board implements Serializable
 		setPiece(move.getPreviousPosition(), getPiece(move.getNewPosition()));
 		setPiece(move.getNewPosition(), null);
 		
-		getPiece(move.getPreviousPosition()).decreaseNumMoves();
-		
 		if(tempPiece != null)
 			setPiece(tempPiece.getPosition(), tempPiece);
+		
+		getPiece(move.getPreviousPosition()).decreaseNumMoves();
 	}
 	
 	//Various Value Checks
