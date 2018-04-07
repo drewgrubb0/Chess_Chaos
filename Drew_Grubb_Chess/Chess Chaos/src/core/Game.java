@@ -169,7 +169,7 @@ public class Game
 			for(int x = 0 ; x < players.length ; x++)
 			{
 				g.drawString("Player " + x + " timer", 50 + (120 * x), 530);
-				g.drawString(timers[x] + "", 70 + (120*x), 560);
+				g.drawString(timers[x] + "", 70 + (120*x), 550);
 			}
 	}
 	

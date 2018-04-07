@@ -107,7 +107,7 @@ public class PlayState implements GameState
 				buttons[x].render(g);
 		
 		//Render timers
-		g.drawString("" + gameTimer, 750, 15);
+		g.drawString("" + gameTimer, 740, 15);
 		
 		//EndGame Rendering
 		
