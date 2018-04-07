@@ -213,7 +213,7 @@ public class Board implements Serializable
 	 * @return is the piece at the given position part of pieceColor's team.
 	 */
 	public boolean isFriendlyPiece(Position pos, int pieceColor)
-	{
+	{	
 		if(!isEmptySpace(pos))
 		{
 			//Is piece a solid "Wall" piece
@@ -301,6 +301,11 @@ public class Board implements Serializable
 			piece.setPosition(pos);
 			piece.setBoard(this);
 		}
+		
+		for(int x = 0 ; x < getLength() ; x++)
+			for(int y = 0 ; y < getHeight() ; y++)
+				if(piece != null)
+					piece.setBoard(this);
 	}
 	
 	/**
@@ -346,6 +351,24 @@ public class Board implements Serializable
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * @return the current score of the board based on the pieces available
+	 */
+	public int getCurrentScore()
+	{
+		int boardScore = 0;
+		
+		for(int x = 0 ; x < getLength() ; x++)
+			for(int y = 0 ; y < getHeight() ; y++)
+				if(getPiece(new Position(x, y)) != null)
+					if(isFriendlyPiece(new Position(x, y), 0)) //If on Team 1
+						boardScore += getPiece(new Position(x, y)).getPieceValue();
+					else //If on Team 2
+						boardScore -= getPiece(new Position(x, y)).getPieceValue();
+		
+		return boardScore;
 	}
 	
 	/**

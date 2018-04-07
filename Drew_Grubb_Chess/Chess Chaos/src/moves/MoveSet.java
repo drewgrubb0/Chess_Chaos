@@ -42,11 +42,16 @@ public class MoveSet
 		//If this move needs to be checked, check it
 		if(needsVerification)
 		{
+			int preMoveScore = board.getCurrentScore();
+			
 			board.performMove(move);
 			
 			//If it does not put the player's king in check
 			if(board.isInCheck(board.getPiece(move.getNewPosition()).getPieceColor()) == false)
+			{
 				moves.add(move);
+				moves.get(moves.size() - 1).setScore(Math.abs(preMoveScore - board.getCurrentScore()));
+			}
 			
 			board.undoLastMove();
 		}
@@ -71,6 +76,15 @@ public class MoveSet
 	public boolean containsMove(Move move)
 	{
 		return moves.contains(move);
+	}
+	
+	/**
+	 * Removes the last move added to the list
+	 * Used only for castling
+	 */
+	public void removeLastMove()
+	{
+		moves.remove(moves.size() - 1);
 	}
 	
 	/**
@@ -107,6 +121,9 @@ public class MoveSet
 	 */
 	public Move getMove(int index)
 	{
+		if(index >= moves.size() || index < 0)
+			return null;
+		
 		return moves.get(index);
 	}
 

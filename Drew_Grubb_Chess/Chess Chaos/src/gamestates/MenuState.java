@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
+import boards.ChessBoard;
+import boards.ChessBoard4P;
+import boards.OctoChessBoard;
+import boards.RandomBoard;
 import core.Game;
 import d_utils.DButton;
 
@@ -26,9 +30,9 @@ import d_utils.DButton;
 public class MenuState implements GameState
 {
 	public static final int MENU_INITIAL = 0;
-	public static final int MENU_PLAYERS = 1;
-	public static final int MENU_SETTINGS = 2;
-	public static final int MENU_BOARD = 3;
+	public static final int MENU_BOARD = 1;
+	public static final int MENU_PLAYERS = 2;
+	public static final int MENU_SETTINGS = 3;
 	
 	public static final int TYPE_CASUAL = 0;
 	public static final int TYPE_TIMED = 1;
@@ -39,7 +43,6 @@ public class MenuState implements GameState
 	
 	private int currentMenuState;
 	private int currentPlayerSetting;
-	private int gameType;
 	
 	private String menuText;
 	private String subText;
@@ -60,20 +63,23 @@ public class MenuState implements GameState
 	public void init()
 	{
 		currentMenuState = MENU_INITIAL;
+		currentPlayerSetting = 0;
 		
-		buttons = new DButton[3];
+		buttons = new DButton[4];
 		
 		buttons[0] = new DButton();
-		buttons[0].setDimensions(275, 175, 250, 100);
-		buttons[0].setText("Quick Play");
+		buttons[0].setDimensions(70, 320, 250, 100);
+		buttons[0].setText("Play Chess");
 		
 		buttons[1] = new DButton();
-		buttons[1].setDimensions(275, 300, 250, 100);
-		buttons[1].setText("Play Chess");
 		
 		buttons[2] = new DButton();
-		buttons[2].setDimensions(275, 425, 250, 100);
-		buttons[2].setText("Play Chess Chaos");
+		buttons[2].setDimensions(470, 320, 250, 100);
+		buttons[2].setText("Watch Replay");
+		
+		buttons[3] = new DButton();
+		buttons[3].setDimensions(270, 450, 250, 100);
+		buttons[3].setText("Quick Play");
 		
 		menuText = "Welcome to Chess Chaos!";
 		subText = "Please pick your game type";
@@ -127,70 +133,102 @@ public class MenuState implements GameState
 		{
 			if(buttonID == 0)
 			{
-				//Quickplay constructor
-				game = new Game(manager.getInputManager());
-				
-				((PlayState) manager.getState(GameStateManager.PLAY_STATE)).setGame(game);
-				manager.setCurrentState(GameStateManager.PLAY_STATE);
+				currentMenuState = MENU_BOARD;
+				buttons[0].setText("Standard Chess");
+				buttons[1].setText("Random Chess");
+				buttons[1].setDimensions(270, 190, 250, 100);
+				buttons[2].setText("Octogonal Chess");
+				buttons[3].setText("Chess Chaos");
+				subText = "Please choose the board you want to play on";
 			}
 			
 			if(buttonID == 1)
-			{	
-				currentMenuState = MENU_PLAYERS;
-				currentPlayerSetting = 0;
-				menuText = "Standard Chess";
-				subText = "Please choose player 1";
+			{
 				
-				game = new Game(2);
 			}
 			
 			if(buttonID == 2)
 			{
-				currentMenuState = MENU_PLAYERS;
-				currentPlayerSetting = 0;
-				menuText = "Chess Chaos";
-				subText = "Please choose player 1";
-				
-				game = new Game(4);
+				manager.setCurrentState(GameStateManager.REPLAY_STATE);
 			}
 			
-			buttons[0].setText("Human");
-			buttons[1].setText("Random");
-			buttons[2].setText("Minimax");
+			if(buttonID == 3)
+			{
+				game = new Game(manager.getInputManager());
+				((PlayState) manager.getState(GameStateManager.PLAY_STATE)).setGame(game);
+				manager.setCurrentState(GameStateManager.PLAY_STATE);
+			}
+		}
+		else
+		if(currentMenuState == MENU_BOARD)
+		{
+			if(buttonID == 0)
+			{
+				game = new Game(2);
+				game.setBoardType(ChessBoard.BOARD_NAME);
+			}
+			
+			if(buttonID == 1)
+			{
+				game = new Game(2);
+				game.setBoardType(RandomBoard.BOARD_NAME);
+			}
+			
+			if(buttonID == 2)
+			{
+				game = new Game(2);
+				game.setBoardType(OctoChessBoard.BOARD_NAME);
+			}
+			
+			if(buttonID == 3)
+			{
+				game = new Game(4);
+				game.setBoardType(ChessBoard4P.BOARD_NAME);
+			}
+			
+			currentMenuState = MENU_PLAYERS;
+			buttons[0].setText("Random AI");
+			buttons[1].setText("Human Player");
+			buttons[2].setText("Aggressive AI");
+			buttons[3].setText("Quit to Main Menu");
+			subText = "Please choose Player 1";
 		}
 		else
 		if(currentMenuState == MENU_PLAYERS)
 		{
+			
 			if(buttonID == 0)
 			{
-				game.setUpPlayer(currentPlayerSetting, "Human", manager.getInputManager());
-				currentPlayerSetting++;
-				subText = "Please choose player " + (currentPlayerSetting + 1);
+				game.setUpPlayer(currentPlayerSetting, "Random", null);
 			}
 			
 			if(buttonID == 1)
 			{
-				game.setUpPlayer(currentPlayerSetting, "Random", manager.getInputManager());
-				currentPlayerSetting++;
-				subText = "Please choose player " + (currentPlayerSetting + 1);
+				game.setUpPlayer(currentPlayerSetting, "Human", manager.getInputManager());
 			}
 			
 			if(buttonID == 2)
 			{
-				game.setUpPlayer(currentPlayerSetting, "Minimax", manager.getInputManager());
-				currentPlayerSetting++;
-				subText = "Please choose player " + (currentPlayerSetting + 1);
+				game.setUpPlayer(currentPlayerSetting, "Aggressive", null);
 			}
+			
+			if(buttonID == 3)
+			{
+				init();
+				return;
+			}
+			
+			currentPlayerSetting++;
+			subText = "Please choose Player " + (currentPlayerSetting + 1);
 			
 			if(currentPlayerSetting >= game.getNumPlayers())
 			{
 				currentMenuState = MENU_SETTINGS;
-				
-				buttons[0].setText("Casual Chess");
-				buttons[1].setText("Speed Chess");
-				buttons[2].setText("Return to Menu");
-				
 				subText = "Please choose your game mode";
+				buttons[0].setText("Casual Mode");
+				buttons[1].setText("");
+				buttons[1].setDimensions(0, 0, 0, 0);
+				buttons[2].setText("Speed Chess");
 			}
 		}
 		else
@@ -198,25 +236,27 @@ public class MenuState implements GameState
 		{
 			if(buttonID == 0)
 			{
-				gameType = TYPE_CASUAL;
-				game.setBoardType(Game.BOARD_CHESS);
-				
+				game.setGameType(Game.TYPE_CASUAL);
 				((PlayState) manager.getState(GameStateManager.PLAY_STATE)).setGame(game);
 				manager.setCurrentState(GameStateManager.PLAY_STATE);
 			}
 			
 			if(buttonID == 1)
 			{
-				gameType = TYPE_TIMED;
-				game.setBoardType(Game.BOARD_RANDOM);
 				
-				((PlayState) manager.getState(GameStateManager.PLAY_STATE)).setGame(game);
-				manager.setCurrentState(GameStateManager.PLAY_STATE);
 			}
 			
 			if(buttonID == 2)
 			{
+				game.setGameType(Game.TYPE_SPEED);
+				((PlayState) manager.getState(GameStateManager.PLAY_STATE)).setGame(game);
+				manager.setCurrentState(GameStateManager.PLAY_STATE);
+			}
+			
+			if(buttonID == 3)
+			{
 				init();
+				return;
 			}
 		}
 	}

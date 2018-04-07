@@ -14,8 +14,10 @@ import boards.ChessBoard4P;
 import boards.OctoChessBoard;
 import boards.RandomBoard;
 import d_utils.DCountdownTimer;
+import d_utils.DTimer;
 import input.InputManager;
 import moves.Move;
+import players.AggressiveAI;
 import players.Human;
 import players.Player;
 import players.RandomAI;
@@ -27,12 +29,7 @@ import players.RandomAI;
  * @author Drew Grubb
  */
 public class Game
-{
-	public static final int BOARD_CHESS = 0;
-	public static final int BOARD_OCTOGANAL = 1;
-	public static final int BOARD_4PLAYER = 2;
-	public static final int BOARD_RANDOM = 3;
-	
+{	
 	public static final int STATE_PLAYING = 0;
 	public static final int STATE_CHECK = 1;
 	public static final int STATE_DONE = 2;
@@ -41,7 +38,7 @@ public class Game
 	public static final int TYPE_SPEED = 1;
 	
 	private Board board;
-	private int boardType;
+	private String boardType;
 	private Player players[];
 	
 	private int currentTurnColor = 0;
@@ -50,6 +47,7 @@ public class Game
 	
 	private int gameType = 0;
 	private DCountdownTimer[] timers;
+	private DTimer aiTimer;
 	
 	/**
 	 * Constructor that sets up all default game values
@@ -65,30 +63,34 @@ public class Game
 	 */
 	public Game(InputManager manager)
 	{
-		this.boardType = BOARD_CHESS;
+		this.boardType = ChessBoard.BOARD_NAME;
 		
 		players = new Player[2];
 		setUpPlayer(0, "Human", manager);
 		setUpPlayer(1, "Human", manager);
 		
-		gameType = 1;
+		gameType = TYPE_CASUAL;
 	}
 	
+	/**
+	 * Performs all of the required actions when starting the game
+	 * such as setting up the board and starting any timers.
+	 */
 	public void startGame()
 	{
 		//Sets up board based on given type
 		switch(boardType)
 		{
-			case BOARD_CHESS:
+			case ChessBoard.BOARD_NAME:
 				board = new ChessBoard();
 			break;
-			case BOARD_OCTOGANAL:
+			case OctoChessBoard.BOARD_NAME:
 				board = new OctoChessBoard();
 			break;
-			case BOARD_4PLAYER:
+			case ChessBoard4P.BOARD_NAME:
 				board = new ChessBoard4P();
 			break;
-			case BOARD_RANDOM:
+			case RandomBoard.BOARD_NAME:
 				board = new RandomBoard();
 			break;
 			default:
@@ -108,6 +110,9 @@ public class Game
 		stateOfGame = STATE_PLAYING;
 		currentTurnColor = -1;
 		switchTurn(false);
+		
+		aiTimer = new DTimer();
+		aiTimer.startTimer();
 	}
 	
 	/**
@@ -132,9 +137,20 @@ public class Game
 		
 		players[currentTurnColor].calculateMove();
 		
-		//Has to check if the player has decided their move due to human players not calculating instantly.
-		if(players[currentTurnColor].hasDecidedMove())
-			makeMove(players[currentTurnColor].getDecidedMove());
+		if(!(players[currentTurnColor] instanceof Human))
+		{
+			if(aiTimer.getTime() > 500)
+			{
+				if(players[currentTurnColor].hasDecidedMove())
+					makeMove(players[currentTurnColor].getDecidedMove());
+				aiTimer.resetTimer();
+			}
+		}
+		else
+		{
+			if(players[currentTurnColor].hasDecidedMove())
+				makeMove(players[currentTurnColor].getDecidedMove());
+		}
 		
 		board.setSelectedPiece(players[currentTurnColor].getSelectedPiece());
 	}
@@ -175,7 +191,7 @@ public class Game
 	 * Adds move to the playing stack for save-ability and replaying.
 	 */
 	public void makeMove(Move move)
-	{
+	{	
 		board.performMove(move);
 		switchTurn(false);
 	}
@@ -297,7 +313,7 @@ public class Game
 	 * Sets up type of board that this game will be played on.
 	 * @param boardChess
 	 */
-	public void setBoardType(int boardChess)
+	public void setBoardType(String boardChess)
 	{
 		this.boardType = boardChess;
 	}
@@ -321,10 +337,23 @@ public class Game
 			case "Random":
 				players[color] = new RandomAI(board, color);
 			break;
+			case "Aggressive":
+				players[color] = new AggressiveAI(board, color);
+			break;
 			default:
 				players[color] = new Human(board, input, color);
 			break;
 		}
+	}
+	
+	/**
+	 * Method used to set game type where
+	 * casual = 0
+	 * timed = 1
+	 */
+	public void setGameType(int gameType)
+	{
+		this.gameType = gameType;
 	}
 	
 	//////////GETTERS

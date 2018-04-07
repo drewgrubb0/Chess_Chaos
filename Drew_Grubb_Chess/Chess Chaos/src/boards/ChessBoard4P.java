@@ -3,9 +3,9 @@ package boards;
 import moves.Position;
 import pieces.Bishop;
 import pieces.Knight;
-import pieces.Rook;
 import pieces.Piece;
 import pieces.Queen;
+import pieces.Rook;
 
 /**
  * A four player chess board.

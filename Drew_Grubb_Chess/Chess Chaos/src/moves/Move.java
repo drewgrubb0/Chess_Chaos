@@ -19,6 +19,8 @@ public class Move implements Serializable
 	private Position prevPos;
 	private Position newPos;
 	private Piece capturedPiece;
+	private int score;
+	private int castle = 0;
 
 	/**
 	 * Creates a new Move based off Position settings
@@ -28,6 +30,7 @@ public class Move implements Serializable
 		this.prevPos = prevPos;
 		this.newPos = newPos;
 		this.capturedPiece = null;
+		score = 1;
 	}
 	
 	/**
@@ -38,6 +41,7 @@ public class Move implements Serializable
 		this.prevPos = prevPos;
 		this.newPos = new Position(prevPos.getPosX() + xOff, prevPos.getPosY() + yOff);
 		this.capturedPiece = null;
+		score = 0;
 	}
 	
 	/**
@@ -48,6 +52,7 @@ public class Move implements Serializable
 		this.prevPos = prevPos;
 		this.newPos = new Position(prevPos.getPosX() + xOff, prevPos.getPosY() + yOff);
 		this.capturedPiece = capturedPiece;
+		score = 0;
 	}
 	
 	/**
@@ -72,12 +77,49 @@ public class Move implements Serializable
 	
 	//Setters
 	
+	/**
+	 * sets the score of the move for AI evaluation
+	 * @param score
+	 */
+	public void setScore(int score)
+	{
+		this.score = score;
+	}
+	
+	/**
+	 * sets piece that is being captured
+	 * @param capturedPiece
+	 */
 	public void setCapturedPiece(Piece capturedPiece)
 	{
 		this.capturedPiece = capturedPiece;
 	}
 	
+	/**
+	 * @param i the direction of which to castle, -1 for Left 1 for Right
+	 */
+	public void setCastle(int i)
+	{
+		this.castle = i;
+	}
+	
 	//Getters
+	
+	/**
+	 * @return score of the move
+	 */
+	public int getScore()
+	{
+		return score;
+	}
+	
+	/**
+	 * @return if move is a castle, the direction at which to place the rook
+	 */
+	public int getCastle()
+	{
+		return castle;
+	}
 	
 	/**
 	 * @return prevPosition

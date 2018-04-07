@@ -64,6 +64,8 @@ public class PlayState implements GameState
 		if(game == null)
 			manager.setCurrentState(GameStateManager.MENU_STATE);
 		
+		buttons[1].setText("Undo");
+		
 		game.startGame();
 		
 		isPaused = false;
