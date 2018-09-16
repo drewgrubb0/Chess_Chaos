@@ -54,5 +54,6 @@ In case you are curious, I will be using a solid ***zero percent*** of the code,
 
 Thanks again for checking out this repository! If you're curious about some of my other work or want to hire me *cough*, be sure to check out some of the links below! Have a nice day!
 
+- [Portfolio](http://www.drewgrubb.com)
 - [LinkedIn](https://www.linkedin.com/in/drew-grubb/)
 - [Github](https://github.com/drewgrubb0)
